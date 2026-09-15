@@ -30,8 +30,7 @@ DEBUG = True
 # URL Vercel hands out (they all end in .vercel.app unless a custom domain
 # is attached). ALLOWED_HOSTS env var lets a custom domain be added later
 # without another code change/deploy.
-ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
-ALLOWED_HOSTS += [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h.strip()]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
 
