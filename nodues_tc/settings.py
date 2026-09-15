@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,20 @@ SECRET_KEY = 'django-insecure-ui5g&nk&5zcfsgkj66450b7-gpe*^mi%y_%s()=ie!j-724_=(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# '.vercel.app' covers the production alias and every per-deployment/preview
+# URL Vercel hands out (they all end in .vercel.app unless a custom domain
+# is attached). ALLOWED_HOSTS env var lets a custom domain be added later
+# without another code change/deploy.
+ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS += [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h.strip()]
+
+CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+
+# Vercel terminates TLS and forwards to the app over plain HTTP — without
+# this, Django thinks every request is insecure, which breaks CSRF/session
+# cookies on POST requests (e.g. login) even though the site is served
+# over HTTPS.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
