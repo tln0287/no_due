@@ -1,0 +1,654 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban Board · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link ">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link ">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link active">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link ">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link ">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link ">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail">
+  <a href="dashboard.html">LRIRMS</a> <span>/</span>
+  <a href="tickets-list.html">Tickets</a> <span>/</span> <span class="current">Kanban Board</span>
+</div>
+
+      
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Kanban Board</h1>
+    <div class="page-subtitle">Drag a card to move it through the workflow.</div>
+  </div>
+</div>
+
+<div class="kanban-wrap">
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>New</span>
+      <span class="text-muted">4</span>
+    </div>
+    <div class="kanban-col-body" data-status="NEW">
+      
+      <div class="kanban-card" data-ticket-id="33" onclick="if(!window.__dragging){window.location='/tickets/33/'}">
+        <div class="k-ticket-no">TCK-000033</div>
+        <div class="k-subject">test</div>
+        <div class="text-muted small">test · Employee Request</div>
+        <div class="k-meta">
+          <span>Aarav Academic</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="18" onclick="if(!window.__dragging){window.location='/tickets/18/'}">
+        <div class="k-ticket-no">TCK-000018</div>
+        <div class="k-subject">Personal Contact request from Divya</div>
+        <div class="text-muted small">Divya Menon · Personal Contact</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -17d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="19" onclick="if(!window.__dragging){window.location='/tickets/19/'}">
+        <div class="k-ticket-no">TCK-000019</div>
+        <div class="k-subject">Student Related &gt; Academic Request request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Student Related &gt; Academic Request</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="2" onclick="if(!window.__dragging){window.location='/tickets/2/'}">
+        <div class="k-ticket-no">TCK-000002</div>
+        <div class="k-subject">Employee Request &gt; Facilities request from Vikram</div>
+        <div class="text-muted small">Vikram Nair · Employee Request &gt; Facilities</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Triaged</span>
+      <span class="text-muted">4</span>
+    </div>
+    <div class="kanban-col-body" data-status="TRIAGED">
+      
+      <div class="kanban-card" data-ticket-id="32" onclick="if(!window.__dragging){window.location='/tickets/32/'}">
+        <div class="k-ticket-no">TCK-000032</div>
+        <div class="k-subject">Need a fee concession form</div>
+        <div class="text-muted small">Demo Parent · Uncategorized</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="3" onclick="if(!window.__dragging){window.location='/tickets/3/'}">
+        <div class="k-ticket-no">TCK-000003</div>
+        <div class="k-subject">Employee Request &gt; Transfer request from Sara</div>
+        <div class="text-muted small">Sara Thomas · Employee Request &gt; Transfer</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="21" onclick="if(!window.__dragging){window.location='/tickets/21/'}">
+        <div class="k-ticket-no">TCK-000021</div>
+        <div class="k-subject">Parent Request &gt; Complaints request from Arjun</div>
+        <div class="text-muted small">Arjun Reddy · Parent Request &gt; Complaints</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="4" onclick="if(!window.__dragging){window.location='/tickets/4/'}">
+        <div class="k-ticket-no">TCK-000004</div>
+        <div class="k-subject">Parent Request &gt; Fee Concession request from Arjun</div>
+        <div class="text-muted small">Arjun Reddy · Parent Request &gt; Fee Concession</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Assigned</span>
+      <span class="text-muted">3</span>
+    </div>
+    <div class="kanban-col-body" data-status="ASSIGNED">
+      
+      <div class="kanban-card" data-ticket-id="20" onclick="if(!window.__dragging){window.location='/tickets/20/'}">
+        <div class="k-ticket-no">TCK-000020</div>
+        <div class="k-subject">Prospective Employee &gt; Job Enquiry request from Arjun</div>
+        <div class="text-muted small">Arjun Reddy · Prospective Employee &gt; Job Enquiry</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="22" onclick="if(!window.__dragging){window.location='/tickets/22/'}">
+        <div class="k-ticket-no">TCK-000022</div>
+        <div class="k-subject">Parent Request &gt; Complaints request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Parent Request &gt; Complaints</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="23" onclick="if(!window.__dragging){window.location='/tickets/23/'}">
+        <div class="k-ticket-no">TCK-000023</div>
+        <div class="k-subject">Parent Request &gt; Fee Concession request from Rahul</div>
+        <div class="text-muted small">Rahul Mehta · Parent Request &gt; Fee Concession</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>In Progress</span>
+      <span class="text-muted">8</span>
+    </div>
+    <div class="kanban-col-body" data-status="IN_PROGRESS">
+      
+      <div class="kanban-card" data-ticket-id="1" onclick="if(!window.__dragging){window.location='/tickets/1/'}">
+        <div class="k-ticket-no">TCK-000001</div>
+        <div class="k-subject">Student Related &gt; Academic Request request from Suresh</div>
+        <div class="text-muted small">Suresh Pillai · Student Related &gt; Academic Request</div>
+        <div class="k-meta">
+          <span>Unassigned</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="24" onclick="if(!window.__dragging){window.location='/tickets/24/'}">
+        <div class="k-ticket-no">TCK-000024</div>
+        <div class="k-subject">Employee Request &gt; Facilities request from Rahul</div>
+        <div class="text-muted small">Rahul Mehta · Employee Request &gt; Facilities</div>
+        <div class="k-meta">
+          <span>Hari HR</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="7" onclick="if(!window.__dragging){window.location='/tickets/7/'}">
+        <div class="k-ticket-no">TCK-000007</div>
+        <div class="k-subject">Parent Request &gt; Admission request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Parent Request &gt; Admission</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="5" onclick="if(!window.__dragging){window.location='/tickets/5/'}">
+        <div class="k-ticket-no">TCK-000005</div>
+        <div class="k-subject">Employee Request &gt; Transfer request from Karan</div>
+        <div class="text-muted small">Karan Kapoor · Employee Request &gt; Transfer</div>
+        <div class="k-meta">
+          <span>Hari HR</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="25" onclick="if(!window.__dragging){window.location='/tickets/25/'}">
+        <div class="k-ticket-no">TCK-000025</div>
+        <div class="k-subject">Parent Request &gt; Admission request from Suresh</div>
+        <div class="text-muted small">Suresh Pillai · Parent Request &gt; Admission</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="8" onclick="if(!window.__dragging){window.location='/tickets/8/'}">
+        <div class="k-ticket-no">TCK-000008</div>
+        <div class="k-subject">Employee Request &gt; Facilities request from Divya</div>
+        <div class="text-muted small">Divya Menon · Employee Request &gt; Facilities</div>
+        <div class="k-meta">
+          <span>Hari HR</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="6" onclick="if(!window.__dragging){window.location='/tickets/6/'}">
+        <div class="k-ticket-no">TCK-000006</div>
+        <div class="k-subject">Parent Request &gt; Complaints request from Arjun</div>
+        <div class="text-muted small">Arjun Reddy · Parent Request &gt; Complaints</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="9" onclick="if(!window.__dragging){window.location='/tickets/9/'}">
+        <div class="k-ticket-no">TCK-000009</div>
+        <div class="k-subject">Personal Contact request from Suresh</div>
+        <div class="text-muted small">Suresh Pillai · Personal Contact</div>
+        <div class="k-meta">
+          <span>Lakshmi Aide</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Waiting On Information</span>
+      <span class="text-muted">4</span>
+    </div>
+    <div class="kanban-col-body" data-status="WAITING_ON_INFO">
+      
+      <div class="kanban-card" data-ticket-id="27" onclick="if(!window.__dragging){window.location='/tickets/27/'}">
+        <div class="k-ticket-no">TCK-000027</div>
+        <div class="k-subject">Parent Request &gt; Admission request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Parent Request &gt; Admission</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -22d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="10" onclick="if(!window.__dragging){window.location='/tickets/10/'}">
+        <div class="k-ticket-no">TCK-000010</div>
+        <div class="k-subject">Parent Request &gt; Complaints request from Vikram</div>
+        <div class="text-muted small">Vikram Nair · Parent Request &gt; Complaints</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -22d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="28" onclick="if(!window.__dragging){window.location='/tickets/28/'}">
+        <div class="k-ticket-no">TCK-000028</div>
+        <div class="k-subject">Parent Request &gt; Fee Concession request from Divya</div>
+        <div class="text-muted small">Divya Menon · Parent Request &gt; Fee Concession</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="11" onclick="if(!window.__dragging){window.location='/tickets/11/'}">
+        <div class="k-ticket-no">TCK-000011</div>
+        <div class="k-subject">Parent Request &gt; Complaints request from Rahul</div>
+        <div class="text-muted small">Rahul Mehta · Parent Request &gt; Complaints</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Escalated / Blocked</span>
+      <span class="text-muted">5</span>
+    </div>
+    <div class="kanban-col-body" data-status="ESCALATED">
+      
+      <div class="kanban-card" data-ticket-id="29" onclick="if(!window.__dragging){window.location='/tickets/29/'}">
+        <div class="k-ticket-no">TCK-000029</div>
+        <div class="k-subject">Prospective Employee &gt; Recruitment Follow-up request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Prospective Employee &gt; Recruitment Follow-up</div>
+        <div class="k-meta">
+          <span>Reena Recruiter</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="26" onclick="if(!window.__dragging){window.location='/tickets/26/'}">
+        <div class="k-ticket-no">TCK-000026</div>
+        <div class="k-subject">Prospective Employee &gt; Recruitment Follow-up request from Divya</div>
+        <div class="text-muted small">Divya Menon · Prospective Employee &gt; Recruitment Follow-up</div>
+        <div class="k-meta">
+          <span>Reena Recruiter</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="12" onclick="if(!window.__dragging){window.location='/tickets/12/'}">
+        <div class="k-ticket-no">TCK-000012</div>
+        <div class="k-subject">Parent Request &gt; Fee Concession request from Rahul</div>
+        <div class="text-muted small">Rahul Mehta · Parent Request &gt; Fee Concession</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -23d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="30" onclick="if(!window.__dragging){window.location='/tickets/30/'}">
+        <div class="k-ticket-no">TCK-000030</div>
+        <div class="k-subject">Employee Request &gt; Transfer request from Divya</div>
+        <div class="text-muted small">Divya Menon · Employee Request &gt; Transfer</div>
+        <div class="k-meta">
+          <span>Hari HR</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -25d</span>
+          
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="13" onclick="if(!window.__dragging){window.location='/tickets/13/'}">
+        <div class="k-ticket-no">TCK-000013</div>
+        <div class="k-subject">Parent Request &gt; Fee Concession request from Suresh</div>
+        <div class="text-muted small">Suresh Pillai · Parent Request &gt; Fee Concession</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -25d</span>
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Resolved</span>
+      <span class="text-muted">2</span>
+    </div>
+    <div class="kanban-col-body" data-status="RESOLVED">
+      
+      <div class="kanban-card" data-ticket-id="31" onclick="if(!window.__dragging){window.location='/tickets/31/'}">
+        <div class="k-ticket-no">TCK-000031</div>
+        <div class="k-subject">Student Related &gt; Academic Request request from Neha</div>
+        <div class="text-muted small">Neha Gupta · Student Related &gt; Academic Request</div>
+        <div class="k-meta">
+          <span>Aarav Academic</span>
+          <span class="cell-muted">24d old</span>
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="14" onclick="if(!window.__dragging){window.location='/tickets/14/'}">
+        <div class="k-ticket-no">TCK-000014</div>
+        <div class="k-subject">Personal Contact request from Sara</div>
+        <div class="text-muted small">Sara Thomas · Personal Contact</div>
+        <div class="k-meta">
+          <span>Lakshmi Aide</span>
+          <span class="cell-muted">24d old</span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div class="kanban-col">
+    <div class="kanban-col-header">
+      <span>Closed</span>
+      <span class="text-muted">3</span>
+    </div>
+    <div class="kanban-col-body" data-status="CLOSED">
+      
+      <div class="kanban-card" data-ticket-id="15" onclick="if(!window.__dragging){window.location='/tickets/15/'}">
+        <div class="k-ticket-no">TCK-000015</div>
+        <div class="k-subject">Employee Request &gt; Leave request from Divya</div>
+        <div class="text-muted small">Divya Menon · Employee Request &gt; Leave</div>
+        <div class="k-meta">
+          <span>Hari HR</span>
+          <span class="cell-muted">25d old</span>
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="16" onclick="if(!window.__dragging){window.location='/tickets/16/'}">
+        <div class="k-ticket-no">TCK-000016</div>
+        <div class="k-subject">Student Related &gt; Academic Request request from Priya</div>
+        <div class="text-muted small">Priya Iyer · Student Related &gt; Academic Request</div>
+        <div class="k-meta">
+          <span>Aarav Academic</span>
+          <span class="cell-muted">27d old</span>
+        </div>
+      </div>
+      
+      <div class="kanban-card" data-ticket-id="17" onclick="if(!window.__dragging){window.location='/tickets/17/'}">
+        <div class="k-ticket-no">TCK-000017</div>
+        <div class="k-subject">Parent Request &gt; Admission request from Sara</div>
+        <div class="text-muted small">Sara Thomas · Parent Request &gt; Admission</div>
+        <div class="k-meta">
+          <span>Rita Registrar</span>
+          <span class="cell-muted">30d old</span>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+<script>
+$(function () {
+  if (!true) return;
+
+  $(".kanban-col-body").sortable({
+    connectWith: ".kanban-col-body",
+    placeholder: "kanban-card",
+    forcePlaceholderSize: true,
+    start: function () { window.__dragging = true; },
+    stop: function () { setTimeout(function () { window.__dragging = false; }, 50); },
+    receive: function (event, ui) {
+      var $card = ui.item;
+      var ticketId = $card.data("ticket-id");
+      var toStatus = $(this).data("status");
+      var $originalList = ui.sender;
+
+      function post(reason) {
+        $.ajax({
+          url: "/workflow/tickets/0/transition/ajax/".replace("0", ticketId),
+          method: "POST",
+          data: { to_status: toStatus, reason: reason || "" },
+          headers: { "X-CSRFToken": "OUlwoAcPnFD7q1uA8LET1LNz3Rh2uu1r3UwOEbXM7nfIKrmqWGa799myVTpjfB1l" },
+          success: function () { location.reload(); },
+          error: function (xhr) {
+            var msg = (xhr.responseJSON && xhr.responseJSON.error) || "Could not move ticket.";
+            if (msg.toLowerCase().indexOf("reason is required") !== -1) {
+              var reasonText = prompt("This transition requires a reason:");
+              if (reasonText) { post(reasonText); return; }
+            } else {
+              alert(msg);
+            }
+            $originalList.sortable("cancel");
+            location.reload();
+          },
+        });
+      }
+      post();
+    },
+  }).disableSelection();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>No Due Certificate — {{ eff.student_name }}</title>
+<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/bootstrap-icons.css' %}" rel="stylesheet">
+<style>
+  body { background: #eef1f5; }
+  .toolbar { max-width: 850px; margin: 0 auto 1rem; padding: 0 1rem; display: flex; justify-content: flex-end; gap: .5rem; }
+  .certificate {
+    max-width: 850px; margin: 0 auto 2rem; background: #fff; padding: 2.5rem 3rem;
+    border: 1px solid #ccc; font-family: 'Times New Roman', Georgia, serif; color: #111;
+  }
+  table.cert-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: .92rem; }
+  table.cert-table th, table.cert-table td { border: 1px solid #333; padding: .4rem .55rem; vertical-align: top; }
+  table.cert-table th { background: #f3f3f3; text-align: left; }
+  .label-col { width: 34%; font-weight: 600; }
+  .cert-section-title { text-align: center; font-weight: 700; font-size: 1.05rem; margin: 0 0 .75rem; text-transform: uppercase; }
+  .signature-line { display: flex; justify-content: space-between; margin: 2rem 0 .5rem; font-size: .9rem; }
+  .signature-line .sig { border-top: 1px solid #333; padding-top: .25rem; min-width: 220px; text-align: center; }
+  .cert-statement { font-size: .9rem; margin: 1rem 0; }
+  .sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem 1rem; margin-top: 2.5rem; }
+  .sign-grid .sig-box { border-top: 1px solid #333; padding-top: .3rem; text-align: center; font-size: .85rem; }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .certificate { border: none; padding: 0; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light"><i class="bi bi-arrow-left"></i> Back</a>
+  <a href="{% url 'no-dues-edit' roll_no %}" class="btn btn-light"><i class="bi bi-pencil-square"></i> Edit Every Field</a>
+  <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Print / Save as PDF</button>
+</div>
+
+<div class="certificate">
+
+  <div class="cert-section-title">No Due Certificate cum Study / Transfer Certificate</div>
+
+  <table class="cert-table">
+    <tbody>
+      <tr><td class="label-col">Student Name</td><td>{{ eff.student_name }}</td></tr>
+      <tr><td class="label-col">Roll No. / Admission No.</td><td>{{ eff.roll_no_register }}{% if clearance.admission_no %} / {{ clearance.admission_no }}{% endif %}</td></tr>
+      <tr><td class="label-col">Branch / Level</td><td>{{ clearance.get_branch_level_display|default:'—' }}</td></tr>
+      <tr><td class="label-col">Course / Branch Name</td><td>{{ eff.course_branch_name }}</td></tr>
+      <tr><td class="label-col">Semester / Year</td><td>{{ eff.year_of_study }}</td></tr>
+      <tr><td class="label-col">Section</td><td>{{ eff.section_display }}</td></tr>
+    </tbody>
+  </table>
+
+  <table class="cert-table">
+    <thead>
+      <tr><th>Semester / Payment</th><th>Amount Paid (&#8377;)</th><th>Date Paid</th><th>Challan No. / Receipt No.</th></tr>
+    </thead>
+    <tbody>
+      {% for r in fee_rows %}
+      <tr>
+        <td>{{ r.label }}</td>
+        <td>{% if r.amount_paid %}&#8377;{{ r.amount_paid|floatformat:2 }}{% endif %}</td>
+        <td>{{ r.date_paid|date:'d-m-Y' }}</td>
+        <td>{{ r.receipt_no }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="text-muted">No payments on record.</td></tr>
+      {% endfor %}
+      <tr><td class="fw-bold">Total</td><td class="fw-bold">&#8377;{{ fee_total|floatformat:2 }}</td><td colspan="2"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="signature-line">
+    <div class="sig">Prepared By{% if clearance.prepared_by %}: {{ clearance.prepared_by }}{% endif %}</div>
+    <div class="sig">Verified By{% if clearance.verified_by %}: {{ clearance.verified_by }}{% endif %}</div>
+  </div>
+
+  <table class="cert-table">
+    <thead>
+      <tr><th>Particulars</th><th>Amount Due (&#8377;)</th><th>Cleared (Yes/No)</th><th>Remarks</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Library</td><td>&mdash;</td>
+        <td>{% if clearance.library_cleared %}Yes{% else %}&mdash;{% endif %}</td>
+        <td>{{ clearance.library_remarks }}</td>
+      </tr>
+      <tr>
+        <td>Laboratory</td><td>&mdash;</td>
+        <td>{% if clearance.lab_cleared %}Yes{% else %}&mdash;{% endif %}</td>
+        <td>{{ clearance.lab_remarks }}</td>
+      </tr>
+      <tr>
+        <td>Sports / Physical Education</td><td>&mdash;</td>
+        <td>{% if clearance.sports_cleared %}Yes{% else %}&mdash;{% endif %}</td>
+        <td>{{ clearance.sports_remarks }}</td>
+      </tr>
+      <tr>
+        <td>Other Fee{% if clearance.other_fee_desc %} ({{ clearance.other_fee_desc }}){% endif %}</td>
+        <td>{% if clearance.other_fee_amount %}&#8377;{{ clearance.other_fee_amount|floatformat:2 }}{% else %}&mdash;{% endif %}</td>
+        <td>
+          {% if clearance.other_fee_cleared %}Yes{% elif clearance.other_fee_amount %}No{% else %}&mdash;{% endif %}
+        </td>
+        <td>{{ clearance.other_fee_remarks }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="cert-statement">
+    Certified that the above named student has paid all Tuition Fee dues and has
+    {% if clearance.all_other_dues_cleared %}NO DUES{% else %}<u>PENDING DUES (see above)</u>{% endif %}
+    pending against Library, Laboratory, Sports / Physical Education, or any Other Fee as on the date of issue of this certificate.
+  </p>
+
+  <div class="sign-grid">
+    <div class="sig-box">{{ clearance.hod_name|default:'&nbsp;' }}<br>HOD</div>
+    <div class="sig-box">{{ clearance.os_name|default:'&nbsp;' }}<br>O/S (Office Superintendent)</div>
+    <div class="sig-box">{{ clearance.accounts_officer_name|default:'&nbsp;' }}<br>Accounts Officer</div>
+    <div class="sig-box">{{ clearance.principal_name|default:'&nbsp;' }}<br>Principal</div>
+  </div>
+
+</div>
+</body>
+</html>

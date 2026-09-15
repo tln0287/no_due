@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="auth-page">
+
+  
+<div class="auth-card">
+  <div class="auth-brand">
+    <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+    <div>
+      <div class="brand-title">LRIRMS</div>
+      <div class="brand-subtitle">Request Intake &amp; Routing</div>
+    </div>
+  </div>
+  
+  <form method="post">
+    <div class="mb-3">
+      <label class="form-label small fw-semibold">Username</label>
+      <input type="text" name="username" class="form-control" autofocus required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label small fw-semibold">Password</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold py-2">Sign In</button>
+  </form>
+  <p class="text-center text-muted small mt-3 mb-0">Leadership Request Intake &amp; Routing Management System</p>
+</div>
+
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+
+<script>
+  document.querySelector(".auth-card form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    window.location.href = "dashboard.html";
+  });
+</script>
+</body>
+</html>

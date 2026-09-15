@@ -1,0 +1,224 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TC &amp; No Due Certificate — {{ eff.student_name }}</title>
+<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/bootstrap-icons.css' %}" rel="stylesheet">
+<style>
+  body { background: #eef1f5; }
+  .toolbar { max-width: 850px; margin: 0 auto 1rem; padding: 0 1rem; display: flex; justify-content: flex-end; gap: .5rem; }
+  .certificate {
+    max-width: 850px; margin: 0 auto 2rem; background: #fff; padding: 2.5rem 3rem;
+    border: 1px solid #ccc; font-family: 'Times New Roman', Georgia, serif; color: #111;
+  }
+  .cert-header { display: flex; align-items: center; justify-content: center; gap: .85rem; margin-bottom: 1rem; }
+  .cert-header .cert-logo { height: 84px; width: 84px; object-fit: contain; flex-shrink: 0; }
+  .cert-header h1 { font-size: 1.4rem; font-weight: 700; margin: 0; text-align: center; }
+  .cert-header .sub { font-size: 1rem; margin-top: .1rem; text-align: center; }
+  .cert-title { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 1rem 0 .1rem; text-transform: uppercase; }
+  .cert-note { text-align: center; font-style: italic; font-size: .85rem; margin-bottom: .75rem; }
+  .cert-meta { display: flex; justify-content: space-between; font-size: .9rem; margin-bottom: .75rem; }
+  table.cert-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: .92rem; }
+  table.cert-table th, table.cert-table td { border: 1px solid #333; padding: .4rem .55rem; vertical-align: top; }
+  table.cert-table th { background: #f3f3f3; text-align: left; }
+  .num-col { width: 2rem; text-align: center; }
+  .label-col { width: 34%; font-weight: 600; }
+  .signature-line { display: flex; justify-content: space-between; margin: 2rem 0 .5rem; font-size: .9rem; }
+  .signature-line .sig { border-top: 1px solid #333; padding-top: .25rem; min-width: 220px; text-align: center; }
+  .checkbox-row span { margin-right: 1.25rem; white-space: nowrap; }
+  .cert-section-title { text-align: center; font-weight: 700; font-size: 1.05rem; margin: .75rem 0 .75rem; text-transform: uppercase; }
+  .cert-header-repeat { margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #333; }
+  .cert-statement { font-size: .9rem; margin: 1rem 0; }
+  .sign-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem 1rem; margin-top: 2.5rem; }
+  .sign-grid .sig-box { border-top: 1px solid #333; padding-top: .3rem; text-align: center; font-size: .85rem; }
+  .cert-status-banner {
+    text-align: center; font-weight: 700; font-size: .85rem; letter-spacing: .03em; text-transform: uppercase;
+    padding: .5rem; margin-bottom: 1.25rem; border-radius: 3px; border: 1px solid transparent;
+  }
+  .cert-status-banner.status-cleared { background: #dcfff1; color: #1f845a; border-color: #1f845a; }
+  .cert-status-banner.status-dues { background: #ffedeb; color: #ae2e24; border-color: #ae2e24; }
+  .cert-status-banner.status-pending { background: #fff4dc; color: #a54800; border-color: #a54800; }
+  .cert-status-banner.status-not_sent { background: #f3f3f3; color: #444; border-color: #999; }
+  @media print {
+    @page { margin: 0.55in 0.75in; }
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .certificate { border: none; padding: 0; max-width: 100%; }
+    /* Margin-top on the first element of a new page is unreliable across
+       browsers (often collapsed to 0 right after a forced break), so the
+       repeated letterhead uses padding-top instead to guarantee it isn't
+       flush against the page's top edge. No divider border needed here
+       since it's already the top of a fresh page. */
+    .cert-header-repeat { break-before: page; margin-top: 0; padding-top: .3in; border-top: none; }
+    /* The No-Due section (table + fee table + dues table + statement +
+       4-name sign-off grid) is tight against one page's height once the
+       repeated letterhead is added — trim the same vertical rhythm that
+       reads fine on screen so it doesn't spill a near-empty extra page. */
+    table.cert-table { margin-bottom: .6rem; }
+    .signature-line { margin: 1rem 0 .4rem; }
+    .cert-statement { margin: .6rem 0; }
+    .sign-grid { margin-top: 1.25rem; gap: 1.25rem 1rem; }
+    /* If it still doesn't fit, move the whole 2x2 grid to the next page
+       together rather than splitting it — HOD/O-S and Accounts
+       Officer/Principal must never land on different pages. */
+    .sign-grid { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light"><i class="bi bi-arrow-left"></i> Back</a>
+  <a href="{% url 'certificate-edit' roll_no %}" class="btn btn-light"><i class="bi bi-pencil-square"></i> Edit Every Field</a>
+  <form method="post" action="{% url 'send-for-approval' roll_no %}" style="display:inline;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="certificate-view">
+    <button type="submit" class="btn btn-light"><i class="bi bi-send"></i> {% if overall_status == 'NOT_SENT' %}Send for Approval{% else %}Resend{% endif %}</button>
+  </form>
+  <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Print / Save as PDF</button>
+</div>
+
+<div class="certificate">
+
+  <div class="cert-status-banner status-{{ overall_status|lower }}">
+    {% if overall_status == 'CLEARED' %}Cleared — No Dues Pending
+    {% elif overall_status == 'DUES' %}Dues Pending — Not Cleared
+    {% elif overall_status == 'PENDING' %}Pending Department Approval
+    {% else %}Not Yet Sent for Approval
+    {% endif %}
+  </div>
+
+  <div class="cert-header">
+    <img src="{% static 'images/lbc.png' %}" alt="College Seal" class="cert-logo">
+    <div>
+      <h1>Dr LANKAPALLI BULLAYYA COLLEGE</h1>
+      <div class="sub">VISAKHAPATNAM</div>
+    </div>
+  </div>
+  <div class="cert-title">Application of Transfer Certificate</div>
+  <div class="cert-note">(To be issued at the time of leaving the Institution)</div>
+  <div class="cert-meta">
+    <span>T.C. / N.D.C. No.: {{ clearance.tc_ndc_no|default:'_______________' }}</span>
+    <span>Admission No.: {{ clearance.admission_no|default:'_______________' }}</span>
+    <span>Date: {{ clearance.certificate_date|date:'d-m-Y'|default:'_______________' }}</span>
+  </div>
+
+  <table class="cert-table">
+    <tbody>
+      <tr><td class="num-col">1</td><td class="label-col">Name of Student (CAPITAL LETTERS)</td><td>{{ eff.student_name|upper }}</td></tr>
+      <tr><td class="num-col">2</td><td class="label-col">Father's / Guardian's Name</td><td>{{ clearance.father_name }}</td></tr>
+      <tr><td class="num-col">3</td><td class="label-col">Mother's Name</td><td>{{ clearance.mother_name }}</td></tr>
+      <tr><td class="num-col">4</td><td class="label-col">Nationality &amp; Religion</td><td>{{ clearance.nationality }}{% if clearance.nationality and clearance.religion %} &amp; {% endif %}{{ clearance.religion }}</td></tr>
+      <tr><td class="num-col">5</td><td class="label-col">Date of Birth</td><td>{{ clearance.date_of_birth|date:'d-m-Y' }}</td></tr>
+      <tr>
+        <td class="num-col">6</td><td class="label-col">Branch / Level</td>
+        <td class="checkbox-row">
+          {% for code, label in clearance.BRANCH_LEVEL_CHOICES %}
+            <span>{% if clearance.branch_level == code %}&#9745;{% else %}&#9744;{% endif %} {{ label }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+      <tr><td class="num-col">7</td><td class="label-col">Course / Branch Name (e.g., ECE, CSE, MBA)</td><td>{{ eff.course_branch_name }}</td></tr>
+      <tr><td class="num-col">8</td><td class="label-col">Roll No. / Register No.</td><td>{{ eff.roll_no_register }}</td></tr>
+      <tr><td class="num-col">9</td><td class="label-col">Year of Study / Semester</td><td>{{ eff.year_of_study }}</td></tr>
+      <tr><td class="num-col">10</td><td class="label-col">Date of Last Examination Held</td><td>{{ clearance.date_of_last_exam|date:'d-m-Y' }}</td></tr>
+      <tr><td class="num-col">11</td><td class="label-col">Year of Passing the course</td><td>{{ clearance.year_of_passing }}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="signature-line" style="justify-content: flex-end;">
+    <div class="sig">Signature of the Candidate</div>
+  </div>
+
+  <div class="cert-header cert-header-repeat">
+    <img src="{% static 'images/lbc.png' %}" alt="College Seal" class="cert-logo">
+    <div>
+      <h1>Dr LANKAPALLI BULLAYYA COLLEGE</h1>
+      <div class="sub">VISAKHAPATNAM</div>
+    </div>
+  </div>
+  <div class="cert-section-title">No Due Certificate cum Study / Transfer Certificate</div>
+
+  <table class="cert-table">
+    <tbody>
+      <tr><td class="label-col">Student Name</td><td>{{ eff.student_name }}</td></tr>
+      <tr><td class="label-col">Roll No. / Admission No.</td><td>{{ eff.roll_no_register }}{% if clearance.admission_no %} / {{ clearance.admission_no }}{% endif %}</td></tr>
+      <tr><td class="label-col">Branch / Level</td><td>{{ clearance.get_branch_level_display|default:'—' }}</td></tr>
+      <tr><td class="label-col">Course / Branch Name</td><td>{{ eff.course_branch_name }}</td></tr>
+      <tr><td class="label-col">Semester / Year</td><td>{{ eff.year_of_study }}</td></tr>
+      <tr><td class="label-col">Section</td><td>{{ eff.section_display }}</td></tr>
+    </tbody>
+  </table>
+
+  <table class="cert-table">
+    <thead>
+      <tr><th>Semester / Payment</th><th>Amount Paid (&#8377;)</th><th>Date Paid</th><th>Challan No. / Receipt No.</th></tr>
+    </thead>
+    <tbody>
+      {% for r in fee_rows %}
+      <tr>
+        <td>{{ r.label }}</td>
+        <td>{% if r.amount_paid %}&#8377;{{ r.amount_paid|floatformat:2 }}{% endif %}</td>
+        <td>{{ r.date_paid|date:'d-m-Y' }}</td>
+        <td>{{ r.receipt_no }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="text-muted">No payments on record.</td></tr>
+      {% endfor %}
+      <tr><td class="fw-bold">Total</td><td class="fw-bold">&#8377;{{ fee_total|floatformat:2 }}</td><td colspan="2"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="signature-line">
+    <div class="sig">Prepared By{% if clearance.prepared_by %}: {{ clearance.prepared_by }}{% endif %}</div>
+    <div class="sig">Verified By{% if clearance.verified_by %}: {{ clearance.verified_by }}{% endif %}</div>
+  </div>
+
+  <table class="cert-table">
+    <thead>
+      <tr><th>Particulars</th><th>Amount Due (&#8377;)</th><th>Cleared (Yes/No)</th><th>Remarks</th></tr>
+    </thead>
+    <tbody>
+      {% for row in approvals %}
+      <tr>
+        <td>{{ row.label }}</td>
+        <td>{% if row.approval.amount_due %}&#8377;{{ row.approval.amount_due|floatformat:2 }}{% else %}&mdash;{% endif %}</td>
+        <td>
+          {% if row.approval.status == 'CLEARED' %}Yes
+          {% elif row.approval.status == 'DUES' %}No
+          {% elif row.approval.status == 'PENDING' %}Pending
+          {% else %}Not sent
+          {% endif %}
+        </td>
+        <td>{{ row.approval.remarks }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>Other Fee{% if clearance.other_fee_desc %} ({{ clearance.other_fee_desc }}){% endif %}</td>
+        <td>{% if clearance.other_fee_amount %}&#8377;{{ clearance.other_fee_amount|floatformat:2 }}{% else %}&mdash;{% endif %}</td>
+        <td>
+          {% if clearance.other_fee_cleared %}Yes{% elif clearance.other_fee_amount %}No{% else %}&mdash;{% endif %}
+        </td>
+        <td>{{ clearance.other_fee_remarks }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="cert-statement">
+    Certified that the above named student has paid all Tuition Fee dues and has
+    {% if clearance.all_other_dues_cleared %}NO DUES{% elif overall_status == 'DUES' %}<u>PENDING DUES (see above)</u>{% else %}<u>PENDING CLEARANCE (see above)</u>{% endif %}
+    pending against Library, Laboratory, Sports / Physical Education, or any Other Fee as on the date of issue of this certificate.
+  </p>
+
+  <div class="sign-grid">
+    <div class="sig-box">{{ clearance.hod_name|default:'&nbsp;' }}<br>HOD</div>
+    <div class="sig-box">{{ clearance.os_name|default:'&nbsp;' }}<br>O/S (Office Superintendent)</div>
+    <div class="sig-box">{{ clearance.accounts_officer_name|default:'&nbsp;' }}<br>Accounts Officer</div>
+    <div class="sig-box">{{ clearance.principal_name|default:'&nbsp;' }}<br>Principal</div>
+  </div>
+
+</div>
+</body>
+</html>

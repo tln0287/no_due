@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Add Students{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <span class="current">Add Students</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Add Students</h1>
+    <div class="page-subtitle">Upload an Excel file in the transactions.xlsx format to add new students or refresh existing ones — there's no separate student table, a student is just a Roll No that appears here.</div>
+  </div>
+  <a href="{% url 'sample-format' %}" class="btn btn-light"><i class="bi bi-download"></i> Download Sample Format</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="lr-card p-4">
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">{{ form.excel_file.label }}</label>
+          {{ form.excel_file }}
+          {% for error in form.excel_file.errors %}
+            <div class="text-danger small mt-1">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-upload"></i> Upload &amp; Import</button>
+        <a href="{% url 'student-list' %}" class="btn btn-light">Cancel</a>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="lr-card p-4">
+      <h6 class="fw-bold">File format</h6>
+      <p class="small">
+        Not sure where to start? <a href="{% url 'sample-format' %}">Download the sample format</a> —
+        it has the exact header row plus one filled-in example row to copy.
+      </p>
+      <p class="small text-muted">
+        First row = column headers, matching <code>transactions.xlsx</code> exactly. Each row is one fee
+        transaction; a student with several payments just has several rows sharing the same <strong>Roll No</strong>.
+        Re-uploading is safe — rows are matched and updated by <strong>Order</strong> number, nothing is duplicated.
+      </p>
+      <p class="small text-muted mb-1">Required columns:</p>
+      <ul class="small text-muted">
+        <li><strong>Order</strong> — unique transaction/order ID (rows without one are skipped)</li>
+        <li><strong>Name</strong>, <strong>Roll No</strong> — identify the student</li>
+      </ul>
+      <p class="small text-muted mb-1">Also read, if present:</p>
+      <p class="small text-muted">
+        Transaction Date, Tracking, Order Status, Status Message, App Code, Amount, Merchant Amount, Currency,
+        Billing Tel, Billing Email, Bank Name, ID No., Mobile Number, Email, Parent Mobile No, Admission Type,
+        Fee Type, Group, Course, Course Fee, Section, Year, Academic Year, Issue Date, Due Date Installment 1,
+        SDF FEE, SDC FEE, AU FEE, Exam Fee, Other Fee, Installment fee, Late Fee, Re-Admission Fee, Tuition Fee
+        (and the matching "PAST DUES - …" columns for each), Total, remarks.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

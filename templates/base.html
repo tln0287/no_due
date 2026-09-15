@@ -1,0 +1,127 @@
+{% load static students_extras %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Dashboard{% endblock %} · No-Dues &amp; TC</title>
+<link href="{% static 'assets/css/inter-font.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/bootstrap-icons.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/select2.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/dataTables.bootstrap5.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/theme.css' %}" rel="stylesheet">
+{% block extra_css %}{% endblock %}
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-mortarboard-fill"></i></div>
+      <div>
+        <div class="brand-title">No-Dues &amp; TC</div>
+        <div class="brand-subtitle">Certificate Desk</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      {% if not request.user|is_department_only %}
+      <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="{% url 'student-list' %}" class="nav-link {% if request.resolver_match.url_name in 'student-list student-detail certificate-view certificate-edit' %}active{% endif %}">
+        <i class="bi bi-mortarboard-fill"></i><span>Students</span>
+      </a>
+      <a href="{% url 'student-upload' %}" class="nav-link {% if request.resolver_match.url_name == 'student-upload' %}active{% endif %}">
+        <i class="bi bi-upload"></i><span>Add Students</span>
+      </a>
+      <a href="{% url 'demand-list' %}" class="nav-link {% if request.resolver_match.url_name == 'demand-list' %}active{% endif %}">
+        <i class="bi bi-cash-stack"></i><span>Student Demand</span>
+      </a>
+      <a href="{% url 'demand-upload' %}" class="nav-link {% if request.resolver_match.url_name == 'demand-upload' %}active{% endif %}">
+        <i class="bi bi-upload"></i><span>Add Demand</span>
+      </a>
+      {% endif %}
+
+      {% if request.user|has_group:'Library Admin' %}
+      <div class="nav-section-label">Approvals</div>
+      <a href="{% url 'approval-queue' 'library' %}" class="nav-link {% if request.resolver_match.kwargs.dept_slug == 'library' %}active{% endif %}">
+        <i class="bi bi-book-half"></i><span>Library Queue</span>
+      </a>
+      {% endif %}
+      {% if request.user|has_group:'Laboratory Admin' %}
+      {% if not request.user|has_group:'Library Admin' %}<div class="nav-section-label">Approvals</div>{% endif %}
+      <a href="{% url 'approval-queue' 'laboratory' %}" class="nav-link {% if request.resolver_match.kwargs.dept_slug == 'laboratory' %}active{% endif %}">
+        <i class="bi bi-flask"></i><span>Laboratory Queue</span>
+      </a>
+      {% endif %}
+      {% if request.user|has_group:'Sports Admin' %}
+      {% if not request.user|has_group:'Library Admin' and not request.user|has_group:'Laboratory Admin' %}<div class="nav-section-label">Approvals</div>{% endif %}
+      <a href="{% url 'approval-queue' 'sports' %}" class="nav-link {% if request.resolver_match.kwargs.dept_slug == 'sports' %}active{% endif %}">
+        <i class="bi bi-trophy"></i><span>Sports Queue</span>
+      </a>
+      {% endif %}
+
+      {% if request.user.is_staff %}
+      <div class="nav-section-label">Administration</div>
+      <a href="/admin/" class="nav-link">
+        <i class="bi bi-gear-fill"></i><span>Admin</span>
+      </a>
+      {% endif %}
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        {% if not request.user|is_department_only %}
+        <a href="{% url 'student-list' %}" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-search"></i><span class="d-none d-sm-inline"> Find Student</span>
+        </a>
+        {% endif %}
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">{{ request.user.username|slice:":1"|upper }}</span>
+            <span class="d-none d-md-inline">{{ request.user.get_username }}</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <a href="{% url 'password_change' %}" class="dropdown-item"><i class="bi bi-key-fill"></i> Change Password</a>
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="dropdown-item">Logout</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      {% block breadcrumb %}
+      <div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <span class="current">{% block breadcrumb_current %}Dashboard{% endblock %}</span></div>
+      {% endblock %}
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<script src="{% static 'assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/select2.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/js/dataTables.bootstrap5.min.js' %}"></script>
+<script src="{% static 'assets/js/apexcharts.min.js' %}"></script>
+<script src="{% static 'assets/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'assets/js/app.js' %}"></script>
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

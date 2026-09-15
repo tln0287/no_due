@@ -1,0 +1,1335 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tickets · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link ">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link active">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link ">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link ">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link ">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link ">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail">
+  <a href="dashboard.html">LRIRMS</a> <span>/</span> <span class="current">All Tickets</span>
+</div>
+
+      
+<div class="page-header">
+  <div>
+    <h1 class="page-title">All Open Tickets</h1>
+    <div class="page-subtitle">Every request routed through LRIRMS, live SLA status included.</div>
+  </div>
+  <a href="ticket-form.html" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New Ticket</a>
+</div>
+
+<div class="lr-card lr-table-card">
+  <form method="get" class="table-toolbar">
+    <select name="status" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+      <option value="">All statuses</option>
+      
+      <option value="NEW" >New</option>
+      
+      <option value="TRIAGED" >Triaged</option>
+      
+      <option value="ASSIGNED" >Assigned</option>
+      
+      <option value="IN_PROGRESS" >In Progress</option>
+      
+      <option value="WAITING_ON_INFO" >Waiting On Information</option>
+      
+      <option value="ESCALATED" >Escalated / Blocked</option>
+      
+      <option value="RESOLVED" >Resolved</option>
+      
+      <option value="CLOSED" >Closed</option>
+      
+    </select>
+    <select name="category" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+      <option value="">All categories</option>
+      
+      <option value="5" >Employee Request</option>
+      
+      <option value="1" >Parent Request</option>
+      
+      <option value="12" >Personal Contact</option>
+      
+      <option value="9" >Prospective Employee</option>
+      
+      <option value="13" >Student Related</option>
+      
+      <option value="15" >Uncategorized</option>
+      
+      <option value="2" >Parent Request &gt; Admission</option>
+      
+      <option value="4" >Parent Request &gt; Complaints</option>
+      
+      <option value="3" >Parent Request &gt; Fee Concession</option>
+      
+      <option value="8" >Employee Request &gt; Facilities</option>
+      
+      <option value="6" >Employee Request &gt; Leave</option>
+      
+      <option value="7" >Employee Request &gt; Transfer</option>
+      
+      <option value="10" >Prospective Employee &gt; Job Enquiry</option>
+      
+      <option value="11" >Prospective Employee &gt; Recruitment Follow-up</option>
+      
+      <option value="14" >Student Related &gt; Academic Request</option>
+      
+    </select>
+    <select name="only" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
+      <option value="">Any SLA state</option>
+      <option value="breached" >Breached</option>
+      <option value="stale" >Stale</option>
+    </select>
+    
+    <span class="ms-auto cell-muted">33 ticket(s)</span>
+  </form>
+
+  <div style="overflow-x:auto;">
+  <table class="lr-table data-table">
+    <thead>
+      <tr>
+        <th style="width:2rem;"><input type="checkbox" onclick="document.querySelectorAll('.row-check').forEach(c=>c.checked=this.checked)"></th>
+        <th>Request Type</th>
+        <th>Key</th>
+        <th>Summary</th>
+        <th>Reporter</th>
+        <th>Assignee</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Time to resolution</th>
+        <th class="text-center">P</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/33/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000033</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">test</a></td>
+        <td class="cell-muted">test</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">AA</span>
+            <span>Aarav Academic</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-NEW">New</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/32/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-question-circle-fill"></i>
+            <div>
+              <div class="cell-primary">Uncategorized</div>
+              
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000032</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Need a fee concession form</a></td>
+        <td class="cell-muted">Demo Parent</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-TRIAGED">Triaged</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/20/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-plus-fill"></i>
+            <div>
+              <div class="cell-primary">Prospective Employee</div>
+              <div class="cell-muted">Job Enquiry</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000020</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Prospective Employee &gt; Job Enquiry request from Arjun</a></td>
+        <td class="cell-muted">Arjun Reddy</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-ASSIGNED">Assigned</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/18/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-heart"></i>
+            <div>
+              <div class="cell-primary">Personal Contact</div>
+              
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000018</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Personal Contact request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-NEW">New</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -17d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/3/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Transfer</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000003</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Transfer request from Sara</a></td>
+        <td class="cell-muted">Sara Thomas</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-TRIAGED">Triaged</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/1/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-mortarboard-fill"></i>
+            <div>
+              <div class="cell-primary">Student Related</div>
+              <div class="cell-muted">Academic Request</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000001</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Student Related &gt; Academic Request request from Suresh</a></td>
+        <td class="cell-muted">Suresh Pillai</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">13/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -19d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/24/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Facilities</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000024</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Facilities request from Rahul</a></td>
+        <td class="cell-muted">Rahul Mehta</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">HH</span>
+            <span>Hari HR</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/22/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Complaints</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000022</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Complaints request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ASSIGNED">Assigned</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/19/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-mortarboard-fill"></i>
+            <div>
+              <div class="cell-primary">Student Related</div>
+              <div class="cell-muted">Academic Request</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000019</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Student Related &gt; Academic Request request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-NEW">New</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/7/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Admission</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000007</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Admission request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/5/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Transfer</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000005</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Transfer request from Karan</a></td>
+        <td class="cell-muted">Karan Kapoor</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">HH</span>
+            <span>Hari HR</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/2/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Facilities</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000002</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Facilities request from Vikram</a></td>
+        <td class="cell-muted">Vikram Nair</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-NEW">New</span></td>
+        <td class="cell-muted">12/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -20d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/31/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-mortarboard-fill"></i>
+            <div>
+              <div class="cell-primary">Student Related</div>
+              <div class="cell-muted">Academic Request</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000031</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Student Related &gt; Academic Request request from Neha</a></td>
+        <td class="cell-muted">Neha Gupta</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">AA</span>
+            <span>Aarav Academic</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-RESOLVED">Resolved</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="cell-muted">&mdash;</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/25/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Admission</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000025</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Admission request from Suresh</a></td>
+        <td class="cell-muted">Suresh Pillai</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/23/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Fee Concession</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000023</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Fee Concession request from Rahul</a></td>
+        <td class="cell-muted">Rahul Mehta</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ASSIGNED">Assigned</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/21/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Complaints</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000021</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Complaints request from Arjun</a></td>
+        <td class="cell-muted">Arjun Reddy</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-TRIAGED">Triaged</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/14/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-heart"></i>
+            <div>
+              <div class="cell-primary">Personal Contact</div>
+              
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000014</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Personal Contact request from Sara</a></td>
+        <td class="cell-muted">Sara Thomas</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">LA</span>
+            <span>Lakshmi Aide</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-RESOLVED">Resolved</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="cell-muted">&mdash;</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/8/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Facilities</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000008</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Facilities request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">HH</span>
+            <span>Hari HR</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/6/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Complaints</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000006</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Complaints request from Arjun</a></td>
+        <td class="cell-muted">Arjun Reddy</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/4/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Fee Concession</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000004</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Fee Concession request from Arjun</a></td>
+        <td class="cell-muted">Arjun Reddy</td>
+        <td>
+          <span class="cell-muted">Unassigned</span>
+        </td>
+        <td><span class="status-pill status-TRIAGED">Triaged</span></td>
+        <td class="cell-muted">11/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/27/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Admission</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000027</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Admission request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-WAITING_ON_INFO">Waiting On Information</span></td>
+        <td class="cell-muted">10/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -22d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/15/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Leave</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000015</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Leave request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">HH</span>
+            <span>Hari HR</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-CLOSED">Closed</span></td>
+        <td class="cell-muted">10/Jul/26</td>
+        <td>
+          
+          <span class="cell-muted">&mdash;</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/10/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Complaints</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000010</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Complaints request from Vikram</a></td>
+        <td class="cell-muted">Vikram Nair</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-WAITING_ON_INFO">Waiting On Information</span></td>
+        <td class="cell-muted">10/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -22d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/29/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-plus-fill"></i>
+            <div>
+              <div class="cell-primary">Prospective Employee</div>
+              <div class="cell-muted">Recruitment Follow-up</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000029</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Prospective Employee &gt; Recruitment Follow-up request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Reena Recruiter</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ESCALATED">Escalated / Blocked</span></td>
+        <td class="cell-muted">09/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/26/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-plus-fill"></i>
+            <div>
+              <div class="cell-primary">Prospective Employee</div>
+              <div class="cell-muted">Recruitment Follow-up</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000026</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Prospective Employee &gt; Recruitment Follow-up request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Reena Recruiter</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ESCALATED">Escalated / Blocked</span></td>
+        <td class="cell-muted">09/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/12/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Fee Concession</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000012</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Fee Concession request from Rahul</a></td>
+        <td class="cell-muted">Rahul Mehta</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ESCALATED">Escalated / Blocked</span></td>
+        <td class="cell-muted">09/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -23d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-down-short priority-arrow priority-LOW" title="Low priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/9/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-person-heart"></i>
+            <div>
+              <div class="cell-primary">Personal Contact</div>
+              
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000009</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Personal Contact request from Suresh</a></td>
+        <td class="cell-muted">Suresh Pillai</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">LA</span>
+            <span>Lakshmi Aide</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+        <td class="cell-muted">09/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -21d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/28/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Fee Concession</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000028</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Fee Concession request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-WAITING_ON_INFO">Waiting On Information</span></td>
+        <td class="cell-muted">08/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/16/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-mortarboard-fill"></i>
+            <div>
+              <div class="cell-primary">Student Related</div>
+              <div class="cell-muted">Academic Request</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000016</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Student Related &gt; Academic Request request from Priya</a></td>
+        <td class="cell-muted">Priya Iyer</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">AA</span>
+            <span>Aarav Academic</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-CLOSED">Closed</span></td>
+        <td class="cell-muted">08/Jul/26</td>
+        <td>
+          
+          <span class="cell-muted">&mdash;</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/11/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Complaints</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000011</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Complaints request from Rahul</a></td>
+        <td class="cell-muted">Rahul Mehta</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-WAITING_ON_INFO">Waiting On Information</span></td>
+        <td class="cell-muted">08/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -24d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/30/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-briefcase-fill"></i>
+            <div>
+              <div class="cell-primary">Employee Request</div>
+              <div class="cell-muted">Transfer</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000030</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Employee Request &gt; Transfer request from Divya</a></td>
+        <td class="cell-muted">Divya Menon</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">HH</span>
+            <span>Hari HR</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ESCALATED">Escalated / Blocked</span></td>
+        <td class="cell-muted">07/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -25d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-dash-lg priority-arrow priority-MEDIUM" title="Medium priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/13/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Fee Concession</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000013</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Fee Concession request from Suresh</a></td>
+        <td class="cell-muted">Suresh Pillai</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-ESCALATED">Escalated / Blocked</span></td>
+        <td class="cell-muted">07/Jul/26</td>
+        <td>
+          
+          <span class="sla-pill sla-breached"><i class="bi bi-clock-fill"></i> -25d</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-HIGH" title="High priority"></i>
+        </td>
+      </tr>
+      
+      <tr onclick="if(event.target.type!=='checkbox'){window.location='/tickets/17/'}">
+        <td><input type="checkbox" class="row-check" onclick="event.stopPropagation()"></td>
+        <td>
+          <div class="req-type">
+            <i class="bi bi-people-fill"></i>
+            <div>
+              <div class="cell-primary">Parent Request</div>
+              <div class="cell-muted">Admission</div>
+            </div>
+          </div>
+        </td>
+        <td><a href="ticket-detail.html" class="cell-key">TCK-000017</a></td>
+        <td><a href="ticket-detail.html" class="cell-key">Parent Request &gt; Admission request from Sara</a></td>
+        <td class="cell-muted">Sara Thomas</td>
+        <td>
+          
+          <div class="cell-person">
+            <span class="avatar-circle">RR</span>
+            <span>Rita Registrar</span>
+          </div>
+          
+        </td>
+        <td><span class="status-pill status-CLOSED">Closed</span></td>
+        <td class="cell-muted">05/Jul/26</td>
+        <td>
+          
+          <span class="cell-muted">&mdash;</span>
+          
+        </td>
+        <td class="text-center">
+          <i class="bi bi-arrow-up-short priority-arrow priority-URGENT" title="Urgent priority"></i>
+        </td>
+      </tr>
+      
+    </tbody>
+  </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>

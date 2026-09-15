@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Edit TC Application — {{ latest.name }}{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <a href="{% url 'student-detail' roll_no %}">{{ latest.name }}</a> <span>/</span> <span class="current">Edit TC Application</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Application of Transfer Certificate</h1>
+    <div class="page-subtitle">Every field printed on this document is editable here — including name, course, and roll number as they should appear on the certificate. Nothing here changes the imported transaction data.</div>
+  </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% if form.errors %}
+  <div class="alert alert-danger">
+    <div class="fw-bold mb-1">Please fix the following before saving:</div>
+    <ul class="mb-0">
+      {% for field in form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+      {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Certificate Numbers</h6>
+    <div class="row g-3">
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ form.tc_ndc_no.label }}</label>{{ form.tc_ndc_no }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ form.admission_no.label }}</label>{{ form.admission_no }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ form.certificate_date.label }}</label>{{ form.certificate_date }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Fields 1–11</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label small fw-semibold">1. {{ form.student_name.label }}</label>{{ form.student_name }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">2. {{ form.father_name.label }}</label>{{ form.father_name }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">3. {{ form.mother_name.label }}</label>{{ form.mother_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">4a. Nationality</label>{{ form.nationality }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">4b. Religion</label>{{ form.religion }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">5. {{ form.date_of_birth.label }}</label>{{ form.date_of_birth }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">6. {{ form.branch_level.label }}</label>{{ form.branch_level }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">7. {{ form.course_branch_name.label }}</label>{{ form.course_branch_name }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">8. {{ form.roll_no_register.label }}</label>{{ form.roll_no_register }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">9. {{ form.year_of_study.label }}</label>{{ form.year_of_study }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">10. {{ form.date_of_last_exam.label }}</label>{{ form.date_of_last_exam }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">11. {{ form.year_of_passing.label }}</label>{{ form.year_of_passing }}</div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+  <a href="{% url 'tc-application-view' roll_no %}" class="btn btn-light">View / Print</a>
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light">Cancel</a>
+</form>
+{% endblock %}

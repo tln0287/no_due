@@ -1,0 +1,442 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link ">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link ">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link ">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link active">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link ">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link ">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail"><a href="dashboard.html">LRIRMS</a> <span>/</span> <span class="current">Notifications</span></div>
+
+      
+<div class="page-header">
+  <div><h1 class="page-title">Notifications</h1></div>
+  <form method="post" action="notifications.html">
+    <button class="btn btn-light btn-sm">Mark all as read</button>
+  </form>
+</div>
+<div class="lr-card p-0">
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:29</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000033 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">Digest</span>
+      <span class="notif-time">13 Jul 2026, 17:21</span>
+    </div>
+    <div class="notif-message mt-1">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:16</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000032 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000031 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000029 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000030 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000028 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000027 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000026 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000025 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000024 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000023 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000022 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000021 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000020 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000019 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000018 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000017 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000016 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000015 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000014 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000012 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000013 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000011 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000010 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000009 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000008 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000007 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000006 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000005 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block " style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000004 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000003 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000002 needs triage.</div>
+  </a>
+  
+  <a href="notifications.html" class="notif-item d-block unread" style="padding: 1rem 1.25rem;">
+    <div class="d-flex justify-content-between">
+      <span class="pill pill-brand">New Ticket</span>
+      <span class="notif-time">13 Jul 2026, 17:15</span>
+    </div>
+    <div class="notif-message mt-1">New ticket TCK-000001 needs triage.</div>
+  </a>
+  
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>

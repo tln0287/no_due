@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% block title %}Edit TC &amp; No-Due Certificate — {{ latest.name }}{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <a href="{% url 'student-detail' roll_no %}">{{ latest.name }}</a> <span>/</span> <span class="current">Edit TC &amp; No-Due Certificate</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Transfer Certificate &amp; No Due Certificate</h1>
+    <div class="page-subtitle">Every field printed on this document is editable here — including name, course, roll number, and the fee-paid table. Library / Laboratory / Sports dues clearance is decided independently by each department (see below). Nothing here changes the imported transaction data.</div>
+  </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% if tc_form.errors or no_dues_form.errors or formset.errors|length or formset.non_form_errors %}
+  <div class="alert alert-danger">
+    <div class="fw-bold mb-1">Please fix the following before saving:</div>
+    <ul class="mb-0">
+      {% for field in tc_form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+      {% for error in tc_form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for field in no_dues_form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+      {% for error in no_dues_form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for error in formset.non_form_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for row_form in formset %}{% for field in row_form %}{% for error in field.errors %}<li>Fee row {{ forloop.parentloop.parentloop.counter }} — {{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Certificate Numbers</h6>
+    <div class="row g-3">
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ tc_form.tc_ndc_no.label }}</label>{{ tc_form.tc_ndc_no }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ tc_form.admission_no.label }}</label>{{ tc_form.admission_no }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">{{ tc_form.certificate_date.label }}</label>{{ tc_form.certificate_date }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Application of Transfer Certificate — Fields 1–11</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label small fw-semibold">1. {{ tc_form.student_name.label }}</label>{{ tc_form.student_name }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">2. {{ tc_form.father_name.label }}</label>{{ tc_form.father_name }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">3. {{ tc_form.mother_name.label }}</label>{{ tc_form.mother_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">4a. Nationality</label>{{ tc_form.nationality }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">4b. Religion</label>{{ tc_form.religion }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">5. {{ tc_form.date_of_birth.label }}</label>{{ tc_form.date_of_birth }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">6. {{ tc_form.branch_level.label }}</label>{{ tc_form.branch_level }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">7. {{ tc_form.course_branch_name.label }}</label>{{ tc_form.course_branch_name }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">8. {{ tc_form.roll_no_register.label }}</label>{{ tc_form.roll_no_register }}</div>
+      <div class="col-md-4"><label class="form-label small fw-semibold">9. {{ tc_form.year_of_study.label }}</label>{{ tc_form.year_of_study }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">10. {{ tc_form.date_of_last_exam.label }}</label>{{ tc_form.date_of_last_exam }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">11. {{ tc_form.year_of_passing.label }}</label>{{ tc_form.year_of_passing }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">No Due Certificate — Student Summary</h6>
+    <div class="row g-3">
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.section_display.label }}</label>{{ no_dues_form.section_display }}</div>
+    </div>
+    <p class="small text-muted mt-2 mb-0">Name, roll no, course/branch, and semester/year are shared with the section above.</p>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Tuition Fee Paid — Semester-wise Details</h6>
+    {{ formset.management_form }}
+    <div style="overflow-x:auto;">
+    <table class="table table-sm align-middle" id="fee-rows-table">
+      <thead>
+        <tr><th>Semester / Payment</th><th>Amount Paid (&#8377;)</th><th>Date Paid</th><th>Receipt No.</th><th></th></tr>
+      </thead>
+      <tbody id="fee-rows-body">
+        {% for row_form in formset %}
+        <tr class="fee-row">
+          {{ row_form.id }}
+          <td>{{ row_form.label }}</td>
+          <td>{{ row_form.amount_paid }}</td>
+          <td>{{ row_form.date_paid }}</td>
+          <td>{{ row_form.receipt_no }}</td>
+          <td class="text-center">
+            <div class="form-check">{{ row_form.DELETE }}<label class="form-check-label small">Remove</label></div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <button type="button" id="add-fee-row" class="btn btn-sm btn-light"><i class="bi bi-plus-lg"></i> Add Row</button>
+
+    <template id="empty-fee-row-template">
+      <tr class="fee-row">
+        {{ formset.empty_form.id }}
+        <td>{{ formset.empty_form.label }}</td>
+        <td>{{ formset.empty_form.amount_paid }}</td>
+        <td>{{ formset.empty_form.date_paid }}</td>
+        <td>{{ formset.empty_form.receipt_no }}</td>
+        <td class="text-center">
+          <div class="form-check">{{ formset.empty_form.DELETE }}<label class="form-check-label small">Remove</label></div>
+        </td>
+      </tr>
+    </template>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Prepared / Verified By</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label small fw-semibold">{{ no_dues_form.prepared_by.label }}</label>{{ no_dues_form.prepared_by }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">{{ no_dues_form.verified_by.label }}</label>{{ no_dues_form.verified_by }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+      <h6 class="fw-bold mb-0">Department Dues Clearance</h6>
+      <div class="d-flex align-items-center gap-2">
+        <span class="small text-muted">Overall:</span>
+        {% include 'students/_status_pill.html' with status=overall_status %}
+      </div>
+    </div>
+    <div class="row g-2 mb-3">
+      {% for row in approvals %}
+      <div class="col-md-4">
+        <div class="lr-card p-2 d-flex justify-content-between align-items-center">
+          <div>
+            <div class="small fw-semibold">{{ row.label }}</div>
+            {% if row.approval.amount_due %}<div class="cell-muted" style="font-size:.7rem;">Amount Due: &#8377;{{ row.approval.amount_due|floatformat:2 }}</div>{% endif %}
+            {% if row.approval.remarks %}<div class="cell-muted" style="font-size:.7rem;">{{ row.approval.remarks }}</div>{% endif %}
+          </div>
+          {% include 'students/_status_pill.html' with status=row.approval.status %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="small text-muted mb-3">Library, Laboratory, and Sports / Physical Education are no longer edited here — each department decides its own clearance on its approval queue. Use <a href="{% url 'student-detail' roll_no %}">Send for Approval</a> from the student page to (re)notify them.</p>
+    <div class="row g-3 align-items-center">
+      <div class="col-md-2 form-check ms-2">{{ no_dues_form.other_fee_cleared }}<label class="form-check-label">Other Fee</label></div>
+      <div class="col-md-4">{{ no_dues_form.other_fee_remarks }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.other_fee_desc.label }}</label>{{ no_dues_form.other_fee_desc }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.other_fee_amount.label }}</label>{{ no_dues_form.other_fee_amount }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Sign-off Names</h6>
+    <div class="row g-3">
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.hod_name.label }}</label>{{ no_dues_form.hod_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.os_name.label }}</label>{{ no_dues_form.os_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.accounts_officer_name.label }}</label>{{ no_dues_form.accounts_officer_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ no_dues_form.principal_name.label }}</label>{{ no_dues_form.principal_name }}</div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+  <a href="{% url 'certificate-view' roll_no %}" class="btn btn-light">View / Print</a>
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light">Cancel</a>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('add-fee-row').addEventListener('click', function () {
+    var totalForms = document.getElementById('id_feerows-TOTAL_FORMS');
+    var index = parseInt(totalForms.value, 10);
+    var template = document.getElementById('empty-fee-row-template').innerHTML.replace(/__prefix__/g, index);
+    document.getElementById('fee-rows-body').insertAdjacentHTML('beforeend', template);
+    totalForms.value = index + 1;
+  });
+</script>
+{% endblock %}

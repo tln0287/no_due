@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block title %}Edit No-Due Certificate — {{ latest.name }}{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <a href="{% url 'student-detail' roll_no %}">{{ latest.name }}</a> <span>/</span> <span class="current">Edit No-Due Certificate</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">No Due Certificate cum Study / Transfer Certificate</h1>
+    <div class="page-subtitle">Every field on this document is editable, including the fee-paid table — add, edit, or remove rows freely. Nothing here changes the imported transaction data.</div>
+  </div>
+</div>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% if form.errors or formset.errors|length or formset.non_form_errors %}
+  <div class="alert alert-danger">
+    <div class="fw-bold mb-1">Please fix the following before saving:</div>
+    <ul class="mb-0">
+      {% for field in form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+      {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for error in formset.non_form_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for row_form in formset %}{% for field in row_form %}{% for error in field.errors %}<li>Fee row {{ forloop.parentloop.parentloop.counter }} — {{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Student Summary</h6>
+    <div class="row g-3">
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.section_display.label }}</label>{{ form.section_display }}</div>
+    </div>
+    <p class="small text-muted mt-2 mb-0">Name, roll no, course/branch, and semester/year are shared with the Transfer Certificate Application — <a href="{% url 'tc-application-edit' roll_no %}">edit them there</a>.</p>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Tuition Fee Paid — Semester-wise Details</h6>
+    {{ formset.management_form }}
+    <div style="overflow-x:auto;">
+    <table class="table table-sm align-middle" id="fee-rows-table">
+      <thead>
+        <tr><th>Semester / Payment</th><th>Amount Paid (&#8377;)</th><th>Date Paid</th><th>Receipt No.</th><th></th></tr>
+      </thead>
+      <tbody id="fee-rows-body">
+        {% for row_form in formset %}
+        <tr class="fee-row">
+          {{ row_form.id }}
+          <td>{{ row_form.label }}</td>
+          <td>{{ row_form.amount_paid }}</td>
+          <td>{{ row_form.date_paid }}</td>
+          <td>{{ row_form.receipt_no }}</td>
+          <td class="text-center">
+            <div class="form-check">{{ row_form.DELETE }}<label class="form-check-label small">Remove</label></div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <button type="button" id="add-fee-row" class="btn btn-sm btn-light"><i class="bi bi-plus-lg"></i> Add Row</button>
+
+    <template id="empty-fee-row-template">
+      <tr class="fee-row">
+        {{ formset.empty_form.id }}
+        <td>{{ formset.empty_form.label }}</td>
+        <td>{{ formset.empty_form.amount_paid }}</td>
+        <td>{{ formset.empty_form.date_paid }}</td>
+        <td>{{ formset.empty_form.receipt_no }}</td>
+        <td class="text-center">
+          <div class="form-check">{{ formset.empty_form.DELETE }}<label class="form-check-label small">Remove</label></div>
+        </td>
+      </tr>
+    </template>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Prepared / Verified By</h6>
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label small fw-semibold">{{ form.prepared_by.label }}</label>{{ form.prepared_by }}</div>
+      <div class="col-md-6"><label class="form-label small fw-semibold">{{ form.verified_by.label }}</label>{{ form.verified_by }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Other Dues Clearance</h6>
+    <div class="row g-3 align-items-center">
+      <div class="col-md-2 form-check ms-2">{{ form.library_cleared }}<label class="form-check-label">Library</label></div>
+      <div class="col-md-4">{{ form.library_remarks }}</div>
+      <div class="col-md-2 form-check ms-2">{{ form.lab_cleared }}<label class="form-check-label">Laboratory</label></div>
+      <div class="col-md-4">{{ form.lab_remarks }}</div>
+      <div class="col-md-2 form-check ms-2">{{ form.sports_cleared }}<label class="form-check-label">Sports / PE</label></div>
+      <div class="col-md-4">{{ form.sports_remarks }}</div>
+      <div class="col-md-2 form-check ms-2">{{ form.other_fee_cleared }}<label class="form-check-label">Other Fee</label></div>
+      <div class="col-md-4">{{ form.other_fee_remarks }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.other_fee_desc.label }}</label>{{ form.other_fee_desc }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.other_fee_amount.label }}</label>{{ form.other_fee_amount }}</div>
+    </div>
+  </div>
+
+  <div class="lr-card p-4 mb-3">
+    <h6 class="fw-bold mb-3">Sign-off Names</h6>
+    <div class="row g-3">
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.hod_name.label }}</label>{{ form.hod_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.os_name.label }}</label>{{ form.os_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.accounts_officer_name.label }}</label>{{ form.accounts_officer_name }}</div>
+      <div class="col-md-3"><label class="form-label small fw-semibold">{{ form.principal_name.label }}</label>{{ form.principal_name }}</div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+  <a href="{% url 'no-dues-view' roll_no %}" class="btn btn-light">View / Print</a>
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light">Cancel</a>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('add-fee-row').addEventListener('click', function () {
+    var totalForms = document.getElementById('id_feerows-TOTAL_FORMS');
+    var index = parseInt(totalForms.value, 10);
+    var template = document.getElementById('empty-fee-row-template').innerHTML.replace(/__prefix__/g, index);
+    document.getElementById('fee-rows-body').insertAdjacentHTML('beforeend', template);
+    totalForms.value = index + 1;
+  });
+</script>
+{% endblock %}

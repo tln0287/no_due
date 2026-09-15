@@ -1,0 +1,628 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link active">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link ">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link ">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link ">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link ">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link ">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail"><a href="dashboard.html">LRIRMS</a> <span>/</span> <span class="current">Dashboard</span></div>
+
+      
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Leadership Dashboard</h1>
+    <div class="page-subtitle">Live snapshot of request volume, workflow health, and team workload.</div>
+  </div>
+</div>
+
+<div class="widget-grid">
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Tickets by Status</span></div>
+    <div id="chart-status-donut" class="widget-chart"></div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Workflow Pipeline</span></div>
+    <div class="funnel">
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 50%; background: #0c66e4;">
+            <span>New</span>
+          </div>
+        </div>
+        <span class="funnel-count">4</span>
+      </div>
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 50%; background: #2898bd;">
+            <span>Triaged</span>
+          </div>
+        </div>
+        <span class="funnel-count">4</span>
+      </div>
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 38%; background: #00a3bf;">
+            <span>Assigned</span>
+          </div>
+        </div>
+        <span class="funnel-count">3</span>
+      </div>
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 100%; background: #6e5dc6;">
+            <span>In Progress</span>
+          </div>
+        </div>
+        <span class="funnel-count">8</span>
+      </div>
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 25%; background: #1f845a;">
+            <span>Resolved</span>
+          </div>
+        </div>
+        <span class="funnel-count">2</span>
+      </div>
+      
+      <div class="funnel-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width: 38%; background: #57738a;">
+            <span>Closed</span>
+          </div>
+        </div>
+        <span class="funnel-count">3</span>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Tickets by Priority</span></div>
+    <div id="chart-priority-donut" class="widget-chart"></div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title">
+      <span>Pending Triage</span>
+      <a href="tickets-list.html" class="widget-link">View all</a>
+    </div>
+    <div class="list-widget">
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:#00a3bf;"><i class="bi bi-briefcase-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">Employee Request &gt; Facilities request from Vikram</div>
+          <div class="list-row-sub">Employee Request</div>
+        </div>
+        <span class="list-row-pill" style="background:#dfe1e6;color:#44546f;">23d</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:#1f845a;"><i class="bi bi-mortarboard-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">Student Related &gt; Academic Request request from Priya</div>
+          <div class="list-row-sub">Student Related</div>
+        </div>
+        <span class="list-row-pill" style="background:#dfe1e6;color:#44546f;">23d</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:#e2483d;"><i class="bi bi-person-heart"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">Personal Contact request from Divya</div>
+          <div class="list-row-sub">Personal Contact</div>
+        </div>
+        <span class="list-row-pill" style="background:#dfe1e6;color:#44546f;">22d</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:#00a3bf;"><i class="bi bi-briefcase-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">test</div>
+          <div class="list-row-sub">Employee Request</div>
+        </div>
+        <span class="list-row-pill" style="background:#dfe1e6;color:#44546f;">22d</span>
+      </a>
+      
+    </div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title">
+      <span>Upcoming SLA Deadlines</span>
+      <a href="tickets-list.html" class="widget-link">View all</a>
+    </div>
+    <div class="list-widget">
+      <div class="list-empty">No SLA deadlines in the next 7 days.</div>
+    </div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Workload by Assignee</span></div>
+    <div class="legend-row">
+      <span><span class="legend-dot" style="background:#dfe1e6;"></span>To Do</span>
+      <span><span class="legend-dot" style="background:#0c66e4;"></span>In Progress</span>
+      <span><span class="legend-dot" style="background:#a54800;"></span>Waiting/Escalated</span>
+      <span><span class="legend-dot" style="background:#1f845a;"></span>Done</span>
+    </div>
+    <div class="list-widget">
+      
+      <div class="workload-row">
+        <span class="avatar-circle">RR</span>
+        <span class="workload-name">Rita Registrar</span>
+        <span class="workload-bar">
+          
+          
+          
+          
+          <span style="width:17%;background:#dfe1e6;"></span>
+          <span style="width:25%;background:#0c66e4;"></span>
+          <span style="width:50%;background:#a54800;"></span>
+          <span style="width:8%;background:#1f845a;"></span>
+        </span>
+        <span class="workload-total">12</span>
+      </div>
+      
+      <div class="workload-row">
+        <span class="avatar-circle">HH</span>
+        <span class="workload-name">Hari HR</span>
+        <span class="workload-bar">
+          
+          
+          
+          
+          <span style="width:0%;background:#dfe1e6;"></span>
+          <span style="width:60%;background:#0c66e4;"></span>
+          <span style="width:20%;background:#a54800;"></span>
+          <span style="width:20%;background:#1f845a;"></span>
+        </span>
+        <span class="workload-total">5</span>
+      </div>
+      
+      <div class="workload-row">
+        <span class="avatar-circle">AA</span>
+        <span class="workload-name">Aarav Academic</span>
+        <span class="workload-bar">
+          
+          
+          
+          
+          <span style="width:33%;background:#dfe1e6;"></span>
+          <span style="width:0%;background:#0c66e4;"></span>
+          <span style="width:0%;background:#a54800;"></span>
+          <span style="width:67%;background:#1f845a;"></span>
+        </span>
+        <span class="workload-total">3</span>
+      </div>
+      
+      <div class="workload-row">
+        <span class="avatar-circle">RR</span>
+        <span class="workload-name">Reena Recruiter</span>
+        <span class="workload-bar">
+          
+          
+          
+          
+          <span style="width:0%;background:#dfe1e6;"></span>
+          <span style="width:0%;background:#0c66e4;"></span>
+          <span style="width:100%;background:#a54800;"></span>
+          <span style="width:0%;background:#1f845a;"></span>
+        </span>
+        <span class="workload-total">2</span>
+      </div>
+      
+      <div class="workload-row">
+        <span class="avatar-circle">LA</span>
+        <span class="workload-name">Lakshmi Aide</span>
+        <span class="workload-bar">
+          
+          
+          
+          
+          <span style="width:0%;background:#dfe1e6;"></span>
+          <span style="width:50%;background:#0c66e4;"></span>
+          <span style="width:0%;background:#a54800;"></span>
+          <span style="width:50%;background:#1f845a;"></span>
+        </span>
+        <span class="workload-total">2</span>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Ticket Trend (Created vs Resolved)</span></div>
+    <div id="chart-trend" class="widget-chart"></div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Tickets by Category</span></div>
+    <div id="chart-category-bar" class="widget-chart"></div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title">
+      <span>Overdue Tickets</span>
+      <a href="tickets-list.html" class="widget-link">View all</a>
+    </div>
+    <div class="list-widget">
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000013 &middot; Parent Request &gt; Fee Concession request from Suresh</div>
+          <div class="list-row-sub">Rita Registrar</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">25d overdue</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000030 &middot; Employee Request &gt; Transfer request from Divya</div>
+          <div class="list-row-sub">Hari HR</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">25d overdue</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000011 &middot; Parent Request &gt; Complaints request from Rahul</div>
+          <div class="list-row-sub">Rita Registrar</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">24d overdue</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000026 &middot; Prospective Employee &gt; Recruitment Follow-up request from Divya</div>
+          <div class="list-row-sub">Reena Recruiter</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">24d overdue</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000028 &middot; Parent Request &gt; Fee Concession request from Divya</div>
+          <div class="list-row-sub">Rita Registrar</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">24d overdue</span>
+      </a>
+      
+      <a href="ticket-detail.html" class="list-row">
+        <span class="list-icon" style="background:var(--danger);"><i class="bi bi-exclamation-triangle-fill"></i></span>
+        <div class="list-row-body">
+          <div class="list-row-title">TCK-000029 &middot; Prospective Employee &gt; Recruitment Follow-up request from Priya</div>
+          <div class="list-row-sub">Reena Recruiter</div>
+        </div>
+        <span class="list-row-pill" style="background:var(--danger-soft);color:var(--danger);">24d overdue</span>
+      </a>
+      
+    </div>
+  </div>
+
+  <div class="lr-card widget-card lr-table-card span-2">
+    <div class="widget-title" style="padding: 0 .1rem;"><span>Recent Activity</span></div>
+    <div style="overflow-x:auto;">
+    <table class="lr-table">
+      <thead><tr><th>Key</th><th>Summary</th><th>Category</th><th>Status</th><th>Assignee</th><th>Updated</th></tr></thead>
+      <tbody>
+        
+        <tr onclick="window.location='/tickets/6/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000006</a></td>
+          <td class="cell-primary">Parent Request &gt; Complaints request from Arjun</td>
+          <td class="cell-muted">Parent Request</td>
+          <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+          <td>
+            
+            <div class="cell-person"><span class="avatar-circle">RR</span><span>Rita Registrar</span></div>
+            
+          </td>
+          <td class="cell-muted">3 days, 22 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/20/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000020</a></td>
+          <td class="cell-primary">Prospective Employee &gt; Job Enquiry request from Arjun</td>
+          <td class="cell-muted">Prospective Employee</td>
+          <td><span class="status-pill status-ASSIGNED">Assigned</span></td>
+          <td>
+            <span class="cell-muted">Unassigned</span>
+          </td>
+          <td class="cell-muted">3 days, 22 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/8/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000008</a></td>
+          <td class="cell-primary">Employee Request &gt; Facilities request from Divya</td>
+          <td class="cell-muted">Employee Request</td>
+          <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+          <td>
+            
+            <div class="cell-person"><span class="avatar-circle">HH</span><span>Hari HR</span></div>
+            
+          </td>
+          <td class="cell-muted">4 days, 18 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/5/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000005</a></td>
+          <td class="cell-primary">Employee Request &gt; Transfer request from Karan</td>
+          <td class="cell-muted">Employee Request</td>
+          <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+          <td>
+            
+            <div class="cell-person"><span class="avatar-circle">HH</span><span>Hari HR</span></div>
+            
+          </td>
+          <td class="cell-muted">4 days, 18 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/33/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000033</a></td>
+          <td class="cell-primary">test</td>
+          <td class="cell-muted">Employee Request</td>
+          <td><span class="status-pill status-NEW">New</span></td>
+          <td>
+            
+            <div class="cell-person"><span class="avatar-circle">AA</span><span>Aarav Academic</span></div>
+            
+          </td>
+          <td class="cell-muted">4 days, 22 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/1/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000001</a></td>
+          <td class="cell-primary">Student Related &gt; Academic Request request from Suresh</td>
+          <td class="cell-muted">Student Related</td>
+          <td><span class="status-pill status-IN_PROGRESS">In Progress</span></td>
+          <td>
+            <span class="cell-muted">Unassigned</span>
+          </td>
+          <td class="cell-muted">4 days, 23 hours ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/22/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000022</a></td>
+          <td class="cell-primary">Parent Request &gt; Complaints request from Priya</td>
+          <td class="cell-muted">Parent Request</td>
+          <td><span class="status-pill status-ASSIGNED">Assigned</span></td>
+          <td>
+            
+            <div class="cell-person"><span class="avatar-circle">RR</span><span>Rita Registrar</span></div>
+            
+          </td>
+          <td class="cell-muted">3 weeks, 1 day ago</td>
+        </tr>
+        
+        <tr onclick="window.location='/tickets/32/'">
+          <td><a href="ticket-detail.html" class="cell-key">TCK-000032</a></td>
+          <td class="cell-primary">Need a fee concession form</td>
+          <td class="cell-muted">Uncategorized</td>
+          <td><span class="status-pill status-TRIAGED">Triaged</span></td>
+          <td>
+            <span class="cell-muted">Unassigned</span>
+          </td>
+          <td class="cell-muted">3 weeks, 1 day ago</td>
+        </tr>
+        
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Quick Filters</span></div>
+    <div>
+      <div class="quick-filter-row"><a href="tickets-list.html">My Open Tickets</a><span class="quick-filter-count">0</span></div>
+      <div class="quick-filter-row"><a href="tickets-list.html">Waiting for Info</a><span class="quick-filter-count">4</span></div>
+      <div class="quick-filter-row"><a href="tickets-list.html">Due This Week</a><span class="quick-filter-count">0</span></div>
+      <div class="quick-filter-row"><a href="tickets-list.html">Overdue Tickets</a><span class="quick-filter-count">28</span></div>
+      <div class="quick-filter-row"><a href="tickets-list.html">Recently Resolved</a><span class="quick-filter-count">0</span></div>
+    </div>
+  </div>
+
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+<script>
+$(function () {
+  var palette = ["#0c66e4","#00a3bf","#a54800","#e2483d","#1f845a","#6e5dc6","#8590a2","#e56910"];
+  var donutBase = {
+    chart: { type: "donut", height: 230 },
+    colors: palette,
+    legend: { position: "bottom", fontSize: "12px" },
+    dataLabels: { enabled: false },
+    plotOptions: { pie: { donut: { size: "68%", labels: { show: true, total: { show: true, label: "Total", fontSize: "13px" } } } } },
+  };
+
+  (function () { var d = {"labels": ["New", "Triaged", "Assigned", "In Progress", "Waiting On Information", "Escalated / Blocked", "Resolved", "Closed"], "series": [4, 4, 3, 8, 4, 5, 2, 3]};
+    new ApexCharts(document.querySelector("#chart-status-donut"), Object.assign({}, donutBase, { labels: d.labels, series: d.series })).render();
+  })();
+
+  (function () { var d = {"labels": ["Low", "Medium", "High", "Urgent"], "series": [6, 11, 9, 7]};
+    new ApexCharts(document.querySelector("#chart-priority-donut"), Object.assign({}, donutBase, { labels: d.labels, series: d.series })).render();
+  })();
+
+  (function () { var d = {"labels": ["07 Jul", "08 Jul", "09 Jul", "10 Jul", "11 Jul", "12 Jul", "13 Jul", "14 Jul", "15 Jul", "16 Jul", "17 Jul", "18 Jul", "19 Jul", "20 Jul", "21 Jul", "22 Jul", "23 Jul", "24 Jul", "25 Jul", "26 Jul", "27 Jul", "28 Jul", "29 Jul", "30 Jul", "31 Jul", "01 Aug", "02 Aug", "03 Aug", "04 Aug", "05 Aug"], "created": [2, 3, 4, 3, 8, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "resolved": [0, 1, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]};
+    new ApexCharts(document.querySelector("#chart-trend"), {
+      chart: { type: "line", height: 240, toolbar: { show: false } },
+      series: [{ name: "Created", data: d.created }, { name: "Resolved", data: d.resolved }],
+      xaxis: { categories: d.labels, labels: { rotate: 0, style: { fontSize: "10px" } }, tickAmount: 6 },
+      colors: ["#0c66e4", "#1f845a"], stroke: { curve: "smooth", width: 2.5 },
+      legend: { position: "top", fontSize: "12px" },
+    }).render();
+  })();
+
+  (function () { var d = {"labels": ["Employee Request", "Personal Contact", "Uncategorized", "Parent Request", "Prospective Employee", "Student Related"], "series": [8, 3, 1, 14, 3, 4]};
+    new ApexCharts(document.querySelector("#chart-category-bar"), {
+      chart: { type: "bar", height: 240, toolbar: { show: false } },
+      series: [{ name: "Tickets", data: d.series }],
+      xaxis: { categories: d.labels },
+      plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: "55%" } },
+      colors: palette, legend: { show: false }, dataLabels: { enabled: true, style: { colors: ["#172b4d"] }, offsetX: 18 },
+      grid: { xaxis: { lines: { show: false } } },
+    }).render();
+  })();
+});
+</script>
+
+</body>
+</html>

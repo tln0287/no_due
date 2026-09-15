@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb_current %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Fee &amp; Clearance Dashboard</h1>
+    <div class="page-subtitle">Live snapshot of fee collection and students on record.</div>
+  </div>
+</div>
+
+<div class="widget-grid">
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Students on Record</span></div>
+    <div class="display-6 fw-bold">{{ total_students }}</div>
+    <div class="text-muted small">Distinct roll numbers across all transactions.</div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Total Fee Collected</span></div>
+    <div class="display-6 fw-bold">&#8377;{{ total_collected|floatformat:2 }}</div>
+    <div class="text-muted small">Sum of the Total column across all transactions.</div>
+  </div>
+
+  <div class="lr-card widget-card">
+    <div class="widget-title"><span>Transactions</span></div>
+    <div class="display-6 fw-bold">{{ total_transactions }}</div>
+    <div class="text-muted small">{{ successful }} marked Success.</div>
+  </div>
+
+  <div class="lr-card widget-card lr-table-card span-2">
+    <div class="widget-title"><span>Collection by Group / Branch</span></div>
+    <div style="overflow-x:auto;">
+    <table class="lr-table">
+      <thead><tr><th>Branch</th><th>Students</th><th>Collected (&#8377;)</th></tr></thead>
+      <tbody>
+        {% for row in by_branch %}
+        <tr>
+          <td class="cell-primary">{{ row.branch }}</td>
+          <td>{{ row.students }}</td>
+          <td>{{ row.collected|floatformat:2 }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-muted">No transactions imported yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="lr-card widget-card lr-table-card span-2">
+    <div class="widget-title">
+      <span>Recent Transactions</span>
+      <a href="{% url 'student-list' %}" class="widget-link">View all students</a>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="lr-table">
+      <thead><tr><th>Name</th><th>Roll No</th><th>Course / Branch</th><th>Amount</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for t in recent %}
+        <tr onclick="window.location='{% url 'student-detail' t.roll_no %}'">
+          <td class="cell-primary">{{ t.name }}</td>
+          <td>{{ t.roll_no }}</td>
+          <td class="cell-muted">{{ t.course }} · {{ t.branch }}</td>
+          <td>&#8377;{{ t.total|floatformat:2 }}</td>
+          <td class="cell-muted">{{ t.transaction_date|date:'d M Y' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-muted">No transactions imported yet. Run <code>python manage.py import_transactions</code>.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Students{% endblock %}
+{% block breadcrumb_current %}Students{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Students</h1>
+    <div class="page-subtitle">Filter by any field to find a student and generate their certificate.</div>
+  </div>
+  <a href="{% url 'student-upload' %}" class="btn btn-primary"><i class="bi bi-upload"></i> Add Students</a>
+</div>
+
+<div class="lr-card p-3 mb-3">
+  <form method="get" class="row g-2 align-items-end">
+    <div class="col-md-3">{{ form.q.label_tag }}{{ form.q }}</div>
+    <div class="col-md-2">{{ form.course.label_tag }}{{ form.course }}</div>
+    <div class="col-md-2">{{ form.branch.label_tag }}{{ form.branch }}</div>
+    <div class="col-md-1">{{ form.section.label_tag }}{{ form.section }}</div>
+    <div class="col-md-1">{{ form.year.label_tag }}{{ form.year }}</div>
+    <div class="col-md-2">{{ form.academic_year.label_tag }}{{ form.academic_year }}</div>
+    <div class="col-md-1">{{ form.admission_type.label_tag }}{{ form.admission_type }}</div>
+    <div class="col-12 mt-2">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
+      <a href="{% url 'student-list' %}" class="btn btn-light">Clear</a>
+    </div>
+  </form>
+</div>
+
+<div class="lr-card lr-table-card">
+  <div style="overflow-x:auto;">
+  <table class="lr-table data-table">
+    <thead>
+      <tr>
+        <th>Name</th><th>Roll No</th><th>Course</th><th>Branch</th><th>Section</th><th>Year</th>
+        <th>Academic Year</th><th>Payments</th><th>Total Paid</th><th>Last Payment</th><th>Approval</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr onclick="window.location='{% url 'student-detail' s.roll_no %}'">
+        <td class="cell-primary">{{ s.name }}</td>
+        <td>{{ s.roll_no }}</td>
+        <td class="cell-muted">{{ s.course }}</td>
+        <td class="cell-muted">{{ s.branch }}</td>
+        <td class="cell-muted">{{ s.section }}</td>
+        <td class="cell-muted">{{ s.year }}</td>
+        <td class="cell-muted">{{ s.academic_year }}</td>
+        <td>{{ s.payments }}</td>
+        <td>&#8377;{{ s.total_paid|floatformat:2 }}</td>
+        <td class="cell-muted">{{ s.last_payment|date:'d M Y' }}</td>
+        <td>{% include 'students/_status_pill.html' with status=s.approval_status %}</td>
+        <td onclick="event.stopPropagation()">
+          <a href="{% url 'certificate-view' s.roll_no %}" class="btn btn-sm btn-primary" title="TC &amp; No Due Certificate"><i class="bi bi-file-earmark-check"></i> TC / No-Dues</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="12" class="text-muted">No students match this filter.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}

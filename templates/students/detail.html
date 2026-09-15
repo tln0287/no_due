@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}{{ latest.name }}{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <span class="current">{{ latest.name }}</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{{ latest.name }}</h1>
+    <div class="page-subtitle">Roll No {{ roll_no }} · {{ latest.course }} · {{ latest.branch }} · Section {{ latest.section }} · Year {{ latest.year }} · {{ latest.academic_year }}</div>
+  </div>
+</div>
+
+{% if has_transactions %}
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="lr-card p-3 h-100 d-flex flex-column">
+      <h6 class="fw-bold">Transfer Certificate &amp; No Due Certificate</h6>
+      <p class="small text-muted mb-3 flex-grow-1">Personal details and course history (fields 1–11 of the T.C. application), the tuition fee paid table, other-dues clearance, and sign-off names — all on one certificate.</p>
+      <div class="d-flex gap-2">
+        <a href="{% url 'certificate-edit' roll_no %}" class="btn btn-light btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
+        <a href="{% url 'certificate-view' roll_no %}" class="btn btn-primary btn-sm" target="_blank"><i class="bi bi-file-earmark-text"></i> View / Print</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="lr-card p-3">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+        <div>
+          <h6 class="fw-bold mb-1">No-Dues Approval Workflow</h6>
+          <p class="small text-muted mb-0">Library, Laboratory, and Sports / Physical Education each decide independently. Sending goes to all three at once; the certificate is fully cleared once all three mark No Due.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <span class="small text-muted">Overall:</span>
+          {% include 'students/_status_pill.html' with status=overall_status %}
+          <form method="post" action="{% url 'send-for-approval' roll_no %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-send"></i> {% if overall_status == 'NOT_SENT' %}Send for Approval{% else %}Resend / Notify Again{% endif %}</button>
+          </form>
+        </div>
+      </div>
+      <div class="row g-2">
+        {% for row in approvals %}
+        <div class="col-md-4">
+          <div class="lr-card p-2 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="small fw-semibold">{{ row.label }}</div>
+              {% if row.approval.decided_by %}<div class="cell-muted" style="font-size:.7rem;">{{ row.approval.decided_by.get_username }} · {{ row.approval.decided_at|date:'d M Y' }}</div>{% endif %}
+              {% if row.approval.amount_due %}<div class="cell-muted" style="font-size:.7rem;">Amount Due: &#8377;{{ row.approval.amount_due|floatformat:2 }}</div>{% endif %}
+              {% if row.approval.remarks %}<div class="cell-muted" style="font-size:.7rem;">{{ row.approval.remarks }}</div>{% endif %}
+            </div>
+            {% include 'students/_status_pill.html' with status=row.approval.status %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row g-3 mb-3">
+  <div class="col-12">
+    <div class="lr-card p-3" style="background:var(--warning-soft);">
+      <h6 class="fw-bold mb-1">No fee payment on record yet</h6>
+      <p class="small mb-0">This student only appears in the fee demand data — there's no transaction for them yet. The TC / No-Due certificate and the approval workflow both need at least one payment on record, so those aren't available until a transaction is uploaded for this roll no.</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="lr-card p-3"><div class="text-muted small">Total Paid</div><div class="h4 fw-bold mb-0">&#8377;{{ total_paid|floatformat:2 }}</div></div></div>
+  <div class="col-md-3"><div class="lr-card p-3"><div class="text-muted small">Total Demanded</div><div class="h4 fw-bold mb-0">&#8377;{{ total_demand|floatformat:2 }}</div></div></div>
+  <div class="col-md-3"><div class="lr-card p-3"><div class="text-muted small">Payments</div><div class="h4 fw-bold mb-0">{{ transactions|length }}</div></div></div>
+  <div class="col-md-3"><div class="lr-card p-3"><div class="text-muted small">Mobile</div><div class="h6 fw-bold mb-0">{{ latest.mobile_number|default:'—' }}</div></div></div>
+</div>
+
+{% if demands %}
+<div class="lr-card lr-table-card mb-3">
+  <div class="widget-title" style="padding:0 .1rem;"><span>Demand History</span></div>
+  <div style="overflow-x:auto;">
+  <table class="lr-table">
+    <thead>
+      <tr><th>Installment</th><th>Year</th><th>Academic Year</th><th>Course Fee</th><th>Demand Total</th><th>Status</th><th>Remarks</th></tr>
+    </thead>
+    <tbody>
+      {% for d in demands %}
+      <tr>
+        <td>{{ d.installment }}</td>
+        <td class="cell-muted">{{ d.year }}</td>
+        <td class="cell-muted">{{ d.academic_year }}</td>
+        <td class="cell-muted">{% if d.course_fee %}&#8377;{{ d.course_fee|floatformat:2 }}{% else %}&mdash;{% endif %}</td>
+        <td>&#8377;{{ d.total|floatformat:2 }}</td>
+        <td>
+          {% if d.is_paid %}
+            <span class="pill" style="background:var(--success-soft);color:var(--success);">Paid</span>
+          {% else %}
+            <span class="pill" style="background:var(--danger-soft);color:var(--danger);">Not Paid</span>
+          {% endif %}
+        </td>
+        <td class="cell-muted">{{ d.remarks }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+
+{% if has_transactions %}
+<div class="lr-card lr-table-card">
+  <div class="widget-title" style="padding:0 .1rem;"><span>Transaction History</span></div>
+  <div style="overflow-x:auto;">
+  <table class="lr-table">
+    <thead>
+      <tr><th>Date</th><th>Order / Receipt No</th><th>Fee Type</th><th>Academic Year</th><th>Amount</th><th>Total</th><th>Status</th><th>Remarks</th></tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td class="cell-muted">{{ t.transaction_date|date:'d M Y, H:i' }}</td>
+        <td>{{ t.order_id }}</td>
+        <td class="cell-muted">{{ t.fee_type }}</td>
+        <td class="cell-muted">{{ t.academic_year }}</td>
+        <td>&#8377;{{ t.amount|floatformat:2 }}</td>
+        <td>&#8377;{{ t.total|floatformat:2 }}</td>
+        <td><span class="status-pill">{{ t.order_status }}</span></td>
+        <td class="cell-muted">{{ t.remarks }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

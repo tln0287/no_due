@@ -1,0 +1,9 @@
+{% if status == 'CLEARED' %}
+  <span class="pill" style="background:var(--success-soft);color:var(--success);">No Due</span>
+{% elif status == 'DUES' %}
+  <span class="pill" style="background:var(--danger-soft);color:var(--danger);">Dues</span>
+{% elif status == 'PENDING' %}
+  <span class="pill" style="background:var(--warning-soft);color:var(--warning);">Pending</span>
+{% else %}
+  <span class="pill">Not Sent</span>
+{% endif %}

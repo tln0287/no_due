@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}{{ dept.label }} Approvals{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <span class="current">{{ dept.label }} Approvals</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">{{ dept.label }} — Approval Queue</h1>
+    <div class="page-subtitle">Decide No-Dues clearance for students sent to {{ dept.label }}. Your decision is independent of the other two departments — the certificate is only fully cleared once all three agree.</div>
+  </div>
+</div>
+
+<div class="d-flex gap-2 mb-3">
+  <a href="?status=PENDING" class="btn btn-sm {% if status_filter == 'PENDING' %}btn-primary{% else %}btn-light{% endif %}">Pending <span class="badge bg-secondary">{{ counts.PENDING }}</span></a>
+  <a href="?status=CLEARED" class="btn btn-sm {% if status_filter == 'CLEARED' %}btn-primary{% else %}btn-light{% endif %}">No Due <span class="badge bg-secondary">{{ counts.CLEARED }}</span></a>
+  <a href="?status=DUES" class="btn btn-sm {% if status_filter == 'DUES' %}btn-primary{% else %}btn-light{% endif %}">Dues <span class="badge bg-secondary">{{ counts.DUES }}</span></a>
+</div>
+
+<div class="lr-card lr-table-card">
+  <div style="overflow-x:auto;">
+  <table class="lr-table">
+    <thead>
+      <tr><th>Roll No</th><th>Name</th><th>Course / Branch</th><th>Sent</th><th>Status</th><th>Amount Due</th><th>Remarks</th><th>Decided By</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.approval.clearance.roll_no }}</td>
+        <td>{{ row.latest.name|default:'—' }}</td>
+        <td class="cell-muted">{{ row.latest.course|default:'' }} {{ row.latest.branch|default:'' }}</td>
+        <td class="cell-muted">{{ row.approval.requested_at|date:'d M Y, H:i' }}</td>
+        <td>{% include 'students/_status_pill.html' with status=row.approval.status %}</td>
+        <td class="cell-muted">{% if row.approval.amount_due %}&#8377;{{ row.approval.amount_due|floatformat:2 }}{% else %}&mdash;{% endif %}</td>
+        <td class="cell-muted">{{ row.approval.remarks }}</td>
+        <td class="cell-muted">{{ row.approval.decided_by.get_username|default:'—' }}</td>
+        <td>
+          <form method="post" action="{% url 'approval-decide' dept.slug row.approval.id %}" class="d-flex gap-1 align-items-center decide-form">
+            {% csrf_token %}
+            <select name="status" class="form-select form-select-sm status-select" style="width:auto;">
+              <option value="CLEARED" {% if row.approval.status == 'CLEARED' %}selected{% endif %}>No Due</option>
+              <option value="DUES" {% if row.approval.status == 'DUES' %}selected{% endif %}>Dues</option>
+            </select>
+            <input
+              type="number" step="0.01" min="0" name="amount_due" class="form-control form-control-sm amount-input"
+              placeholder="Amount (₹)" value="{{ row.approval.amount_due|default:'' }}" style="width:110px;"
+              {% if row.approval.status != 'DUES' %}hidden{% endif %}>
+            <input type="text" name="remarks" class="form-control form-control-sm" placeholder="Remarks" value="{{ row.approval.remarks }}" style="width:140px;">
+            <button type="submit" class="btn btn-sm btn-primary">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" class="text-muted">Nothing here.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Only meaningful alongside "Dues" — show the amount field just when
+  // that's selected, per row, and clear it if switched back to No Due.
+  document.querySelectorAll('.decide-form').forEach(function (form) {
+    var select = form.querySelector('.status-select');
+    var amount = form.querySelector('.amount-input');
+    select.addEventListener('change', function () {
+      var isDues = select.value === 'DUES';
+      amount.hidden = !isDues;
+      if (!isDues) amount.value = '';
+    });
+  });
+</script>
+{% endblock %}

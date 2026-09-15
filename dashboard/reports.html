@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link ">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link ">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link ">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link ">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link active">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link ">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail"><a href="dashboard.html">LRIRMS</a> <span>/</span> <span class="current">Reports</span></div>
+
+      
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Reports</h1>
+    <div class="page-subtitle">Export ticket data for offline analysis.</div>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="lr-card p-4 h-100">
+      <h6 class="fw-bold">Ticket Aging Report</h6>
+      <p class="small text-muted">Every ticket with its aging in days and SLA due date.</p>
+      <a href="/reports/ticket-aging.csv" class="btn btn-sm btn-primary"><i class="bi bi-download"></i> Download CSV</a>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="lr-card p-4 h-100">
+      <h6 class="fw-bold">SLA Compliance Report</h6>
+      <p class="small text-muted">Resolution vs. SLA due date for every ticket, with a compliance flag.</p>
+      <a href="/reports/sla-compliance.csv" class="btn btn-sm btn-primary"><i class="bi bi-download"></i> Download CSV</a>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="lr-card p-4 text-muted small">
+      User Productivity, Category Analysis, Escalation, and Monthly Summary reports, plus Excel/PDF export,
+      are planned for a later phase (see README).
+    </div>
+  </div>
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>

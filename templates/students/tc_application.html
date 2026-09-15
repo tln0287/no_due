@@ -1,0 +1,88 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Certificate Application — {{ eff.student_name }}</title>
+<link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'assets/css/bootstrap-icons.css' %}" rel="stylesheet">
+<style>
+  body { background: #eef1f5; }
+  .toolbar { max-width: 850px; margin: 0 auto 1rem; padding: 0 1rem; display: flex; justify-content: flex-end; gap: .5rem; }
+  .certificate {
+    max-width: 850px; margin: 0 auto 2rem; background: #fff; padding: 2.5rem 3rem;
+    border: 1px solid #ccc; font-family: 'Times New Roman', Georgia, serif; color: #111;
+  }
+  .cert-header { text-align: center; margin-bottom: 1rem; }
+  .cert-header h1 { font-size: 1.4rem; font-weight: 700; margin: 0; }
+  .cert-header .sub { font-size: 1rem; margin-top: .1rem; }
+  .cert-title { font-size: 1.1rem; font-weight: 700; text-align: center; margin: 1rem 0 .1rem; text-transform: uppercase; }
+  .cert-note { text-align: center; font-style: italic; font-size: .85rem; margin-bottom: .75rem; }
+  .cert-meta { display: flex; justify-content: space-between; font-size: .9rem; margin-bottom: .75rem; }
+  table.cert-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: .92rem; }
+  table.cert-table th, table.cert-table td { border: 1px solid #333; padding: .4rem .55rem; vertical-align: top; }
+  table.cert-table th { background: #f3f3f3; text-align: left; }
+  .num-col { width: 2rem; text-align: center; }
+  .label-col { width: 34%; font-weight: 600; }
+  .signature-line { display: flex; justify-content: space-between; margin: 2rem 0 .5rem; font-size: .9rem; }
+  .signature-line .sig { border-top: 1px solid #333; padding-top: .25rem; min-width: 220px; text-align: center; }
+  .checkbox-row span { margin-right: 1.25rem; white-space: nowrap; }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none; }
+    .certificate { border: none; padding: 0; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a href="{% url 'student-detail' roll_no %}" class="btn btn-light"><i class="bi bi-arrow-left"></i> Back</a>
+  <a href="{% url 'tc-application-edit' roll_no %}" class="btn btn-light"><i class="bi bi-pencil-square"></i> Edit Every Field</a>
+  <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Print / Save as PDF</button>
+</div>
+
+<div class="certificate">
+
+  <div class="cert-header">
+    <h1>Dr LANKAPALLI BULLAYYA COLLEGE</h1>
+    <div class="sub">VISAKHAPATNAM</div>
+  </div>
+  <div class="cert-title">Application of Transfer Certificate</div>
+  <div class="cert-note">(To be issued at the time of leaving the Institution)</div>
+  <div class="cert-meta">
+    <span>T.C. / N.D.C. No.: {{ clearance.tc_ndc_no|default:'_______________' }}</span>
+    <span>Admission No.: {{ clearance.admission_no|default:'_______________' }}</span>
+    <span>Date: {{ clearance.certificate_date|date:'d-m-Y'|default:'_______________' }}</span>
+  </div>
+
+  <table class="cert-table">
+    <tbody>
+      <tr><td class="num-col">1</td><td class="label-col">Name of Student (CAPITAL LETTERS)</td><td>{{ eff.student_name|upper }}</td></tr>
+      <tr><td class="num-col">2</td><td class="label-col">Father's / Guardian's Name</td><td>{{ clearance.father_name }}</td></tr>
+      <tr><td class="num-col">3</td><td class="label-col">Mother's Name</td><td>{{ clearance.mother_name }}</td></tr>
+      <tr><td class="num-col">4</td><td class="label-col">Nationality &amp; Religion</td><td>{{ clearance.nationality }}{% if clearance.nationality and clearance.religion %} &amp; {% endif %}{{ clearance.religion }}</td></tr>
+      <tr><td class="num-col">5</td><td class="label-col">Date of Birth</td><td>{{ clearance.date_of_birth|date:'d-m-Y' }}</td></tr>
+      <tr>
+        <td class="num-col">6</td><td class="label-col">Branch / Level</td>
+        <td class="checkbox-row">
+          {% for code, label in clearance.BRANCH_LEVEL_CHOICES %}
+            <span>{% if clearance.branch_level == code %}&#9745;{% else %}&#9744;{% endif %} {{ label }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+      <tr><td class="num-col">7</td><td class="label-col">Course / Branch Name (e.g., ECE, CSE, MBA)</td><td>{{ eff.course_branch_name }}</td></tr>
+      <tr><td class="num-col">8</td><td class="label-col">Roll No. / Register No.</td><td>{{ eff.roll_no_register }}</td></tr>
+      <tr><td class="num-col">9</td><td class="label-col">Year of Study / Semester</td><td>{{ eff.year_of_study }}</td></tr>
+      <tr><td class="num-col">10</td><td class="label-col">Date of Last Examination Held</td><td>{{ clearance.date_of_last_exam|date:'d-m-Y' }}</td></tr>
+      <tr><td class="num-col">11</td><td class="label-col">Year of Passing the course</td><td>{{ clearance.year_of_passing }}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="signature-line" style="justify-content: flex-end;">
+    <div class="sig">Signature of the Candidate</div>
+  </div>
+
+</div>
+</body>
+</html>

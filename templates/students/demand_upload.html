@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Add Student Demand{% endblock %}
+{% block breadcrumb %}
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'demand-list' %}">Student Demand</a> <span>/</span> <span class="current">Add Demand</span></div>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Add Student Demand</h1>
+    <div class="page-subtitle">Upload an Excel file in the upload.xlsx format — every sheet in it (one per installment batch) is imported at once.</div>
+  </div>
+  <a href="{% url 'demand-sample-format' %}" class="btn btn-light"><i class="bi bi-download"></i> Download Sample Format</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="lr-card p-4">
+      <div id="demand-upload-alert"></div>
+
+      <form id="demand-upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">{{ form.excel_file.label }}</label>
+          {{ form.excel_file }}
+          <div class="invalid-feedback d-block" id="demand-upload-field-error"></div>
+        </div>
+        <button type="submit" class="btn btn-primary" id="demand-upload-submit">
+          <span class="spinner-border spinner-border-sm me-1 d-none" id="demand-upload-spinner" role="status" aria-hidden="true"></span>
+          <i class="bi bi-upload" id="demand-upload-icon"></i>
+          <span id="demand-upload-label">Upload &amp; Import</span>
+        </button>
+        <a href="{% url 'demand-list' %}" class="btn btn-light">Cancel</a>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="lr-card p-4">
+      <h6 class="fw-bold">File format</h6>
+      <p class="small">
+        Not sure where to start? <a href="{% url 'demand-sample-format' %}">Download the sample format</a> —
+        it has three example sheets (2nd/3rd/4th year installments) with the exact header rows to copy.
+      </p>
+      <p class="small text-muted">
+        Every sheet in the workbook is imported, not just the first — each sheet is treated as its own
+        installment batch (e.g. "2ND YEAR 1st Install"). A student is matched by <strong>Roll No</strong>
+        within that installment, so re-uploading is safe: existing rows are updated in place, nothing is
+        duplicated.
+      </p>
+      <p class="small text-muted mb-1">Required columns (in every sheet):</p>
+      <ul class="small text-muted">
+        <li><strong>Roll No</strong>, <strong>Name</strong> — identify the student</li>
+      </ul>
+      <p class="small text-muted mb-1">Also read, if present:</p>
+      <p class="small text-muted">
+        ID No., Mobile Number, Email, Parent Mobile No, Admission Type, Fee Type, Group, Course, Course Fee,
+        Section, Year, Academic Year, Issue Date, Due Date Installment 1, SDF FEE, SDC FEE, AU FEE, Exam Fee,
+        Other Fee, Installment fee, Late fee, Re-Admission Fee, Tuition Fee (and the matching
+        "PAST DUES - …" columns for each), Total, Remarks, RTF.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  function getCookie(name) {
+    const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+
+  const form = document.getElementById('demand-upload-form');
+  const submitBtn = document.getElementById('demand-upload-submit');
+  const spinner = document.getElementById('demand-upload-spinner');
+  const icon = document.getElementById('demand-upload-icon');
+  const label = document.getElementById('demand-upload-label');
+  const alertBox = document.getElementById('demand-upload-alert');
+  const fieldError = document.getElementById('demand-upload-field-error');
+  const fileInput = form.querySelector('#id_excel_file');
+
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    spinner.classList.toggle('d-none', !isLoading);
+    icon.classList.toggle('d-none', isLoading);
+    label.textContent = isLoading ? 'Uploading…' : 'Upload & Import';
+  }
+
+  function showAlert(kind, message) {
+    alertBox.innerHTML = '<div class="alert alert-' + kind + '">' + message + '</div>';
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    fieldError.textContent = '';
+    alertBox.innerHTML = '';
+
+    if (!fileInput.files.length) {
+      fieldError.textContent = 'Please choose a file to upload.';
+      return;
+    }
+
+    const formData = new FormData(form);
+    setLoading(true);
+
+    fetch(form.action || window.location.href, {
+      method: 'POST',
+      body: formData,
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+      credentials: 'same-origin',
+    })
+      .then(function (response) { return response.json().then(function (data) { return { ok: response.ok, data: data }; }); })
+      .then(function (result) {
+        setLoading(false);
+        if (result.ok && result.data.success) {
+          showAlert('success', result.data.message + ' <a href="{% url "demand-list" %}" class="alert-link">View Student Demand &raquo;</a>');
+          form.reset();
+        } else {
+          fieldError.textContent = result.data.error || 'Something went wrong — please try again.';
+        }
+      })
+      .catch(function () {
+        setLoading(false);
+        fieldError.textContent = 'Upload failed — check your connection and try again.';
+      });
+  });
+})();
+</script>
+{% endblock %}

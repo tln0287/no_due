@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users · LRIRMS</title>
+<link href="assets/css/inter-font.css" rel="stylesheet">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/bootstrap-icons.css" rel="stylesheet">
+<link href="assets/css/select2.min.css" rel="stylesheet">
+<link href="assets/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="assets/css/theme.css" rel="stylesheet">
+
+</head>
+<body class="">
+
+<div class="app-shell">
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="bi bi-diagram-3-fill"></i></div>
+      <div>
+        <div class="brand-title">LRIRMS</div>
+        <div class="brand-subtitle">Request Routing</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link ">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <div class="nav-section-label">Workspace</div>
+      <a href="tickets-list.html" class="nav-link ">
+        <i class="bi bi-ticket-detailed-fill"></i><span>Tickets</span>
+      </a>
+      <a href="kanban.html" class="nav-link ">
+        <i class="bi bi-kanban-fill"></i><span>Kanban Board</span>
+      </a>
+      <div class="nav-section-label">Insights</div>
+      <a href="notifications.html" class="nav-link ">
+        <i class="bi bi-bell-fill"></i><span>Notifications</span>
+      </a>
+      <a href="reports.html" class="nav-link ">
+        <i class="bi bi-file-earmark-bar-graph-fill"></i><span>Reports</span>
+      </a>
+      
+      <div class="nav-section-label">Administration</div>
+      <a href="users-list.html" class="nav-link active">
+        <i class="bi bi-people-fill"></i><span>Users</span>
+      </a>
+      <a href="categories-list.html" class="nav-link ">
+        <i class="bi bi-tags-fill"></i><span>Categories</span>
+      </a>
+      <a href="routing-rules-list.html" class="nav-link ">
+        <i class="bi bi-signpost-split-fill"></i><span>Routing Rules</span>
+      </a>
+      <a href="sla-config-list.html" class="nav-link ">
+        <i class="bi bi-stopwatch-fill"></i><span>SLA Config</span>
+      </a>
+      
+    </nav>
+  </aside>
+
+  <div class="main-column">
+    <header class="topbar">
+      <button class="btn btn-sm btn-light d-lg-none" id="sidebarToggle"><i class="bi bi-list"></i></button>
+      <div class="ms-auto d-flex align-items-center gap-3">
+        <a href="ticket-form.html" class="btn btn-primary btn-sm rounded-pill px-3">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline"> New Ticket</span>
+        </a>
+        <div class="dropdown">
+          <button class="btn btn-light btn-icon position-relative" data-bs-toggle="dropdown">
+            <i class="bi bi-bell"></i>
+            
+            <span class="notif-badge">26</span>
+            
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-dropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000033 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">Daily digest: 15 stale, 9 breached, 9 pending, 5 escalated.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000032 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000031 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000029 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000030 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item ">
+              <div class="notif-message">New ticket TCK-000028 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-item unread">
+              <div class="notif-message">New ticket TCK-000027 needs triage.</div>
+              <div class="notif-time">3 weeks, 1 day ago</div>
+            </a>
+            
+            <a href="notifications.html" class="notif-dropdown-footer">View all</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+            <span class="avatar-circle">A</span>
+            <span class="d-none d-md-inline">Ada Admin</span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <div class="dropdown-item-text text-muted small">Super Admin</div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="profile.html">Profile</a>
+            <a class="dropdown-item" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      
+      
+<div class="breadcrumb-trail"><a href="dashboard.html">LRIRMS</a> <span>/</span> <span class="current">Users</span></div>
+
+      
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Users</h1>
+    <div class="page-subtitle">Manage team members, roles, and department assignments.</div>
+  </div>
+  <a href="user-form.html" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New User</a>
+</div>
+
+<div class="lr-card lr-table-card">
+  <div style="overflow-x:auto;">
+  <table class="lr-table data-table">
+    <thead>
+      <tr>
+        <th>Name</th><th>Employee ID</th><th>Role</th><th>Team</th><th>Department</th><th>Active</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr onclick="window.location='/accounts/users/7/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">A</span>
+            <div>
+              <div class="cell-primary">Aarav Academic</div>
+              <div class="cell-muted">team_acad1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">TEAM_ACAD1</td>
+        <td><span class="pill pill-brand">Team Member</span></td>
+        <td class="cell-muted">Academic Office</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/1/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">A</span>
+            <div>
+              <div class="cell-primary">Ada Admin</div>
+              <div class="cell-muted">admin@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">ADMIN</td>
+        <td><span class="pill pill-brand">Super Admin</span></td>
+        <td class="cell-muted">—</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/3/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">D</span>
+            <div>
+              <div class="cell-primary">Dev Dispatcher</div>
+              <div class="cell-muted">dispatcher1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">DISPATCHER1</td>
+        <td><span class="pill pill-brand">Dispatcher / Triage Officer</span></td>
+        <td class="cell-muted">—</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/5/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">H</span>
+            <div>
+              <div class="cell-primary">Hari HR</div>
+              <div class="cell-muted">team_hr1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">TEAM_HR1</td>
+        <td><span class="pill pill-brand">Team Member</span></td>
+        <td class="cell-muted">HR Team</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/8/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">L</span>
+            <div>
+              <div class="cell-primary">Lakshmi Aide</div>
+              <div class="cell-muted">team_lead1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">TEAM_LEAD1</td>
+        <td><span class="pill pill-brand">Team Member</span></td>
+        <td class="cell-muted">Leadership Office</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/2/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">L</span>
+            <div>
+              <div class="cell-primary">Leela Sharma</div>
+              <div class="cell-muted">leadership1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">LEADERSHIP1</td>
+        <td><span class="pill pill-brand">Leadership User</span></td>
+        <td class="cell-muted">—</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/6/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">R</span>
+            <div>
+              <div class="cell-primary">Reena Recruiter</div>
+              <div class="cell-muted">team_rec1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">TEAM_REC1</td>
+        <td><span class="pill pill-brand">Team Member</span></td>
+        <td class="cell-muted">Recruitment Team</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/4/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">R</span>
+            <div>
+              <div class="cell-primary">Rita Registrar</div>
+              <div class="cell-muted">team_reg1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">TEAM_REG1</td>
+        <td><span class="pill pill-brand">Team Member</span></td>
+        <td class="cell-muted">Registrar Team</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+      <tr onclick="window.location='/accounts/users/9/edit/'">
+        <td>
+          <div class="cell-person">
+            <span class="avatar-circle">V</span>
+            <div>
+              <div class="cell-primary">Vin Viewer</div>
+              <div class="cell-muted">viewer1@lrirms.local</div>
+            </div>
+          </div>
+        </td>
+        <td class="cell-muted">VIEWER1</td>
+        <td><span class="pill pill-brand">Viewer</span></td>
+        <td class="cell-muted">—</td>
+        <td class="cell-muted">—</td>
+        <td><span class="text-success"><i class="bi bi-check-circle-fill"></i></span></td>
+        <td onclick="event.stopPropagation()"><a href="user-form.html" class="btn btn-sm btn-light"><i class="bi bi-pencil"></i></a></td>
+      </tr>
+      
+    </tbody>
+  </table>
+  </div>
+</div>
+
+    </main>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/select2.min.js"></script>
+<script src="assets/js/jquery.dataTables.min.js"></script>
+<script src="assets/js/dataTables.bootstrap5.min.js"></script>
+<script src="assets/js/apexcharts.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/app.js"></script>
+
+</body>
+</html>
