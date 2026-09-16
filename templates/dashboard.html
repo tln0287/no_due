@@ -5,75 +5,246 @@
 {% block content %}
 <div class="page-header">
   <div>
-    <h1 class="page-title">Fee &amp; Clearance Dashboard</h1>
-    <div class="page-subtitle">Live snapshot of fee collection and students on record.</div>
+    <h1 class="page-title">Dr Lankapalli Bullayya College</h1>
+    <div class="page-subtitle">Fee collection overview — demand, payments, and pending dues, college-wide and by branch.</div>
   </div>
 </div>
 
-<div class="widget-grid">
-
-  <div class="lr-card widget-card">
-    <div class="widget-title"><span>Students on Record</span></div>
-    <div class="display-6 fw-bold">{{ total_students }}</div>
-    <div class="text-muted small">Distinct roll numbers across all transactions.</div>
-  </div>
-
-  <div class="lr-card widget-card">
-    <div class="widget-title"><span>Total Fee Collected</span></div>
-    <div class="display-6 fw-bold">&#8377;{{ total_collected|floatformat:2 }}</div>
-    <div class="text-muted small">Sum of the Total column across all transactions.</div>
-  </div>
-
-  <div class="lr-card widget-card">
-    <div class="widget-title"><span>Transactions</span></div>
-    <div class="display-6 fw-bold">{{ total_transactions }}</div>
-    <div class="text-muted small">{{ successful }} marked Success.</div>
-  </div>
-
-  <div class="lr-card widget-card lr-table-card span-2">
-    <div class="widget-title"><span>Collection by Group / Branch</span></div>
-    <div style="overflow-x:auto;">
-    <table class="lr-table">
-      <thead><tr><th>Branch</th><th>Students</th><th>Collected (&#8377;)</th></tr></thead>
-      <tbody>
-        {% for row in by_branch %}
-        <tr>
-          <td class="cell-primary">{{ row.branch }}</td>
-          <td>{{ row.students }}</td>
-          <td>{{ row.collected|floatformat:2 }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="3" class="text-muted">No transactions imported yet.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<div class="lr-card p-3 mb-3">
+  <form method="get" class="row g-2 align-items-end">
+    <div class="col-md-3">{{ form.branch.label_tag }}{{ form.branch }}</div>
+    <div class="col-md-3">{{ form.course.label_tag }}{{ form.course }}</div>
+    <div class="col-md-3">{{ form.academic_year.label_tag }}{{ form.academic_year }}</div>
+    <div class="col-md-3">{{ form.installment.label_tag }}{{ form.installment }}</div>
+    <div class="col-12 mt-2">
+      <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Filter</button>
+      <a href="{% url 'dashboard' %}" class="btn btn-light">Clear</a>
     </div>
-  </div>
-
-  <div class="lr-card widget-card lr-table-card span-2">
-    <div class="widget-title">
-      <span>Recent Transactions</span>
-      <a href="{% url 'student-list' %}" class="widget-link">View all students</a>
-    </div>
-    <div style="overflow-x:auto;">
-    <table class="lr-table">
-      <thead><tr><th>Name</th><th>Roll No</th><th>Course / Branch</th><th>Amount</th><th>Date</th></tr></thead>
-      <tbody>
-        {% for t in recent %}
-        <tr onclick="window.location='{% url 'student-detail' t.roll_no %}'">
-          <td class="cell-primary">{{ t.name }}</td>
-          <td>{{ t.roll_no }}</td>
-          <td class="cell-muted">{{ t.course }} · {{ t.branch }}</td>
-          <td>&#8377;{{ t.total|floatformat:2 }}</td>
-          <td class="cell-muted">{{ t.transaction_date|date:'d M Y' }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5" class="text-muted">No transactions imported yet. Run <code>python manage.py import_transactions</code>.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    </div>
-  </div>
-
+  </form>
 </div>
+
+<div class="kpi-row">
+  <div class="kpi-tile accent-brand dash-card fade-in-up" style="animation-delay:.02s">
+    <div class="kpi-value"><span data-countup data-target="{{ total_students }}">0</span></div>
+    <div class="kpi-label">Students on Record</div>
+  </div>
+  <div class="kpi-tile accent-success dash-card fade-in-up" style="animation-delay:.06s">
+    <div class="kpi-value">&#8377;<span data-countup data-target="{{ total_collected }}">0</span></div>
+    <div class="kpi-label">Total Collected</div>
+  </div>
+  <div class="kpi-tile accent-warning dash-card fade-in-up" style="animation-delay:.10s">
+    <div class="kpi-value">&#8377;<span data-countup data-target="{{ total_demand }}">0</span></div>
+    <div class="kpi-label">Total Demand</div>
+  </div>
+  <div class="kpi-tile accent-danger dash-card fade-in-up" style="animation-delay:.14s">
+    <div class="kpi-value">&#8377;<span data-countup data-target="{{ pending_amount }}">0</span></div>
+    <div class="kpi-label">Pending Amount</div>
+  </div>
+  <div class="kpi-tile accent-brand dash-card fade-in-up" style="animation-delay:.18s">
+    <div class="kpi-value"><span data-countup data-target="{{ collection_rate }}" data-decimals="1">0</span>%</div>
+    <div class="kpi-label">Collection Rate</div>
+  </div>
+  <div class="kpi-tile accent-success dash-card fade-in-up" style="animation-delay:.22s">
+    <div class="kpi-value"><span data-countup data-target="{{ paid_students }}">0</span><span class="text-muted" style="font-size:.6em;"> / {{ total_demand_students }}</span></div>
+    <div class="kpi-label">Students Paid</div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="lr-card p-3 dash-card fade-in-up" style="animation-delay:.26s">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Collection Rate</h6>
+        <span class="fw-bold" style="color:var(--{{ collection_rate_accent }});">{{ collection_rate }}%</span>
+      </div>
+      <div class="meter-track"><div class="meter-fill accent-{{ collection_rate_accent }}" data-meter-target="{{ collection_rate }}"></div></div>
+      <div class="meter-caption"><span>&#8377;{{ paid_demand_amount|floatformat:0 }} collected</span><span>&#8377;{{ total_demand|floatformat:0 }} demanded</span></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="lr-card p-3 dash-card fade-in-up" style="animation-delay:.30s">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0">Students Paid</h6>
+        <span class="fw-bold" style="color:var(--{{ student_paid_rate_accent }});">{{ student_paid_rate }}%</span>
+      </div>
+      <div class="meter-track"><div class="meter-fill accent-{{ student_paid_rate_accent }}" data-meter-target="{{ student_paid_rate }}"></div></div>
+      <div class="meter-caption"><span>{{ paid_students }} paid</span><span>{{ unpaid_students }} pending</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-6">
+    <div class="lr-card chart-card dash-card fade-in-up" style="animation-delay:.34s">
+      <h6>Collected vs Pending — by Branch</h6>
+      <div id="branch-chart"></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="lr-card chart-card dash-card fade-in-up" style="animation-delay:.38s">
+      <h6>Collected vs Pending — by Installment</h6>
+      <div id="installment-chart"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-lg-7">
+    <div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.42s">
+      <div class="widget-title"><span>Branch-wise Breakdown</span></div>
+      <div style="overflow-x:auto;">
+      <table class="lr-table">
+        <thead><tr><th>Branch</th><th>Students</th><th>Paid</th><th>Collected (&#8377;)</th><th>Demand (&#8377;)</th><th>Pending (&#8377;)</th><th>Rate</th></tr></thead>
+        <tbody>
+          {% for branch, row in by_branch.items %}
+          <tr>
+            <td class="cell-primary">{{ branch }}</td>
+            <td>{{ row.students }}</td>
+            <td>{{ row.paid_students }}</td>
+            <td>&#8377;{{ row.paid|floatformat:2 }}</td>
+            <td>&#8377;{{ row.demand|floatformat:2 }}</td>
+            <td>&#8377;{{ row.pending|floatformat:2 }}</td>
+            <td>
+              {% if row.rate >= 75 %}<span class="pill" style="background:var(--success-soft);color:var(--success);">{{ row.rate }}%</span>
+              {% elif row.rate >= 40 %}<span class="pill" style="background:var(--warning-soft);color:var(--warning);">{{ row.rate }}%</span>
+              {% else %}<span class="pill" style="background:var(--danger-soft);color:var(--danger);">{{ row.rate }}%</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-muted">No demand data imported yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.46s">
+      <div class="widget-title">
+        <span>Needs Attention — Highest Pending</span>
+        <a href="{% url 'demand-list' %}?status=UNPAID" class="widget-link">View all</a>
+      </div>
+      <div style="overflow-x:auto;">
+      <table class="lr-table">
+        <thead><tr><th>Name</th><th>Branch</th><th>Installment</th><th>Pending (&#8377;)</th></tr></thead>
+        <tbody>
+          {% for d in top_pending %}
+          <tr onclick="window.location='{% url 'student-detail' d.roll_no %}'">
+            <td class="cell-primary">{{ d.name }}</td>
+            <td class="cell-muted">{{ d.branch }}</td>
+            <td class="cell-muted">{{ d.installment }}</td>
+            <td>&#8377;{{ d.total|floatformat:2 }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-muted">Nothing pending in this filter.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.5s">
+  <div class="widget-title">
+    <span>Recent Transactions</span>
+    <a href="{% url 'student-list' %}" class="widget-link">View all students</a>
+  </div>
+  <div style="overflow-x:auto;">
+  <table class="lr-table">
+    <thead><tr><th>Name</th><th>Roll No</th><th>Course / Branch</th><th>Amount</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for t in recent %}
+      <tr onclick="window.location='{% url 'student-detail' t.roll_no %}'">
+        <td class="cell-primary">{{ t.name }}</td>
+        <td>{{ t.roll_no }}</td>
+        <td class="cell-muted">{{ t.course }} · {{ t.branch }}</td>
+        <td>&#8377;{{ t.total|floatformat:2 }}</td>
+        <td class="cell-muted">{{ t.transaction_date|date:'d M Y' }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="text-muted">No transactions imported yet. Try Add Students, or run <code>python manage.py import_transactions</code>.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+
+{{ branch_chart_data|json_script:"branch-chart-data" }}
+{{ installment_chart_data|json_script:"installment-chart-data" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  // Count-up animation for every KPI value on the page.
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-countup]').forEach(function (el) {
+    var target = parseFloat(el.dataset.target) || 0;
+    var decimals = parseInt(el.dataset.decimals || '0', 10);
+    if (reduceMotion) {
+      el.textContent = target.toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+      return;
+    }
+    var duration = 900;
+    var start = null;
+    function frame(now) {
+      if (start === null) start = now;
+      var p = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (target * eased).toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  });
+
+  // Meter fills animate their width in on load (set after paint so the
+  // CSS transition actually plays instead of snapping to full width).
+  requestAnimationFrame(function () {
+    document.querySelectorAll('.meter-fill').forEach(function (el) {
+      var target = parseFloat(el.dataset.meterTarget) || 0;
+      el.style.width = Math.min(Math.max(target, 0), 100) + '%';
+    });
+  });
+
+  function currency(v) { return '₹' + Number(v).toLocaleString('en-IN'); }
+
+  function stackedBarChart(elId, dataId) {
+    var el = document.querySelector(elId);
+    var dataEl = document.getElementById(dataId);
+    if (!el || !dataEl) return;
+    var data = JSON.parse(dataEl.textContent);
+    if (!data.labels.length) {
+      el.innerHTML = '<p class="text-muted small mb-0">No data for this filter.</p>';
+      return;
+    }
+    new ApexCharts(el, {
+      chart: {
+        type: 'bar', height: 280, stacked: true, toolbar: { show: false },
+        animations: { enabled: !reduceMotion, easing: 'easeout', speed: 650 },
+        fontFamily: 'inherit',
+      },
+      plotOptions: { bar: { horizontal: true, barHeight: '55%', borderRadius: 4 } },
+      series: [
+        { name: 'Collected', data: data.paid },
+        { name: 'Pending', data: data.pending },
+      ],
+      colors: ['#1f845a', '#ae2e24'],
+      xaxis: {
+        categories: data.labels,
+        labels: { formatter: function (v) { return currency(v); } },
+      },
+      legend: { position: 'top', horizontalAlign: 'left' },
+      dataLabels: { enabled: false },
+      grid: { borderColor: '#e9ebee' },
+      tooltip: { y: { formatter: function (v) { return currency(v); } } },
+    }).render();
+  }
+
+  stackedBarChart('#branch-chart', 'branch-chart-data');
+  stackedBarChart('#installment-chart', 'installment-chart-data');
+})();
+</script>
 {% endblock %}

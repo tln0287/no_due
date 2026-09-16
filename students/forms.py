@@ -81,6 +81,24 @@ class DemandFilterForm(forms.Form):
             self.fields[field_name].choices = [('', 'All')] + [(v, v) for v in values]
 
 
+class DashboardFilterForm(forms.Form):
+    branch = forms.ChoiceField(required=False, label='Group / Branch', widget=forms.Select(attrs={'class': 'form-select'}))
+    course = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    academic_year = forms.ChoiceField(required=False, label='Academic Year', widget=forms.Select(attrs={'class': 'form-select'}))
+    installment = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, column in (('branch', 'branch'), ('course', 'course'), ('academic_year', 'academic_year')):
+            values = (
+                Demand.objects.exclude(**{column: ''})
+                .order_by(column).values_list(column, flat=True).distinct()
+            )
+            self.fields[field_name].choices = [('', 'All')] + [(v, v) for v in values]
+        installments = Demand.objects.order_by('installment').values_list('installment', flat=True).distinct()
+        self.fields['installment'].choices = [('', 'All')] + [(v, v) for v in installments]
+
+
 TEXT = forms.TextInput(attrs={'class': 'form-control'})
 DATE = forms.DateInput(attrs={'class': 'form-control', 'type': 'date'})
 CHECK = forms.CheckboxInput(attrs={'class': 'form-check-input'})

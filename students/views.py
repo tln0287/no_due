@@ -8,8 +8,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .decorators import office_required
 from .departments import DEPARTMENT_CODE_CHOICES, DEPARTMENTS_BY_SLUG, STATUS_CHOICES, user_can_act_for
 from .forms import (
-    ApprovalDecisionForm, DemandFilterForm, DemandUploadForm, FeeRowFormSet, NoDuesForm,
-    StudentFilterForm, TCApplicationForm, TransactionUploadForm,
+    ApprovalDecisionForm, DashboardFilterForm, DemandFilterForm, DemandUploadForm, FeeRowFormSet,
+    NoDuesForm, StudentFilterForm, TCApplicationForm, TransactionUploadForm,
 )
 from .importing import (
     ImportError_, build_demand_sample_workbook, build_sample_workbook,
@@ -18,28 +18,120 @@ from .importing import (
 from .models import Clearance, Demand, DueApproval, FeePaidRow, Transaction
 
 
+def _annotate_demand_payment_status(demands):
+    """Mutates each Demand in place, adding .paid_total / .is_paid — a
+    demand row counts as paid if that roll_no has a transaction for the
+    same year of study. Shared by the dashboard and the Student Demand
+    list so the two never disagree on what "paid" means."""
+    roll_nos = [d.roll_no for d in demands]
+    paid_totals = {}
+    for row in (
+        Transaction.objects.filter(roll_no__in=roll_nos)
+        .values('roll_no', 'year').annotate(paid_total=Sum('total'))
+    ):
+        paid_totals[(row['roll_no'], row['year'])] = row['paid_total']
+    for d in demands:
+        d.paid_total = paid_totals.get((d.roll_no, d.year))
+        d.is_paid = d.paid_total is not None
+
+
 @login_required
 @office_required
 def dashboard(request):
-    total_collected = Transaction.objects.aggregate(v=Sum('total'))['v'] or 0
-    total_students = Transaction.objects.values('roll_no').distinct().count()
-    total_transactions = Transaction.objects.count()
-    successful = Transaction.objects.filter(order_status__iexact='Success').count()
+    form = DashboardFilterForm(request.GET or None)
 
-    by_branch = (
-        Transaction.objects.exclude(branch='')
-        .values('branch').annotate(students=Count('roll_no', distinct=True), collected=Sum('total'))
-        .order_by('-collected')
-    )
-    recent = Transaction.objects.order_by('-transaction_date')[:8]
+    txn_qs = Transaction.objects.all()
+    demand_qs = Demand.objects.all()
+
+    if form.is_valid():
+        data = form.cleaned_data
+        if data.get('branch'):
+            txn_qs = txn_qs.filter(branch=data['branch'])
+            demand_qs = demand_qs.filter(branch=data['branch'])
+        if data.get('course'):
+            txn_qs = txn_qs.filter(course=data['course'])
+            demand_qs = demand_qs.filter(course=data['course'])
+        if data.get('academic_year'):
+            txn_qs = txn_qs.filter(academic_year=data['academic_year'])
+            demand_qs = demand_qs.filter(academic_year=data['academic_year'])
+        if data.get('installment'):
+            demand_qs = demand_qs.filter(installment=data['installment'])
+
+    total_collected = txn_qs.aggregate(v=Sum('total'))['v'] or 0
+    total_students = txn_qs.values('roll_no').distinct().count()
+
+    demands = list(demand_qs)
+    _annotate_demand_payment_status(demands)
+
+    total_demand = sum(float(d.total or 0) for d in demands)
+    paid_demand_amount = sum(float(d.total or 0) for d in demands if d.is_paid)
+    pending_amount = total_demand - paid_demand_amount
+    paid_students = sum(1 for d in demands if d.is_paid)
+    unpaid_students = len(demands) - paid_students
+    collection_rate = round(paid_demand_amount / total_demand * 100, 1) if total_demand else 0
+
+    def _grouped(key_func):
+        groups = {}
+        for d in demands:
+            key = key_func(d) or 'Unspecified'
+            row = groups.setdefault(key, {'demand': 0.0, 'paid': 0.0, 'pending': 0.0, 'students': 0, 'paid_students': 0})
+            amount = float(d.total or 0)
+            row['demand'] += amount
+            row['students'] += 1
+            if d.is_paid:
+                row['paid'] += amount
+                row['paid_students'] += 1
+            else:
+                row['pending'] += amount
+        for row in groups.values():
+            row['rate'] = round(row['paid'] / row['demand'] * 100, 1) if row['demand'] else 0
+        return groups
+
+    by_branch = dict(sorted(_grouped(lambda d: d.branch).items(), key=lambda kv: -kv[1]['demand']))
+    # Installment names happen to sort correctly as plain strings
+    # ("2ND YEAR…" < "3RD YEAR…" < "4th Year…") since they lead with the
+    # year digit — no separate ordering key needed.
+    by_installment = dict(sorted(_grouped(lambda d: d.installment).items()))
+
+    top_pending = sorted((d for d in demands if not d.is_paid), key=lambda d: -(d.total or 0))[:8]
+    recent = txn_qs.order_by('-transaction_date')[:8]
+    student_paid_rate = round(paid_students / len(demands) * 100, 1) if demands else 0
+
+    def _rate_accent(rate):
+        if rate >= 75:
+            return 'success'
+        if rate >= 40:
+            return 'warning'
+        return 'danger'
 
     return render(request, 'dashboard.html', {
-        'total_collected': total_collected,
+        'form': form,
         'total_students': total_students,
-        'total_transactions': total_transactions,
-        'successful': successful,
+        'total_collected': total_collected,
+        'total_demand': total_demand,
+        'paid_demand_amount': paid_demand_amount,
+        'pending_amount': pending_amount,
+        'collection_rate': collection_rate,
+        'collection_rate_accent': _rate_accent(collection_rate),
+        'total_demand_students': len(demands),
+        'paid_students': paid_students,
+        'unpaid_students': unpaid_students,
+        'student_paid_rate': student_paid_rate,
+        'student_paid_rate_accent': _rate_accent(student_paid_rate),
         'by_branch': by_branch,
+        'by_installment': by_installment,
+        'top_pending': top_pending,
         'recent': recent,
+        'branch_chart_data': {
+            'labels': list(by_branch.keys()),
+            'paid': [round(row['paid'], 2) for row in by_branch.values()],
+            'pending': [round(row['pending'], 2) for row in by_branch.values()],
+        },
+        'installment_chart_data': {
+            'labels': list(by_installment.keys()),
+            'paid': [round(row['paid'], 2) for row in by_installment.values()],
+            'pending': [round(row['pending'], 2) for row in by_installment.values()],
+        },
     })
 
 
@@ -107,21 +199,7 @@ def demand_list(request):
                 qs = qs.filter(**{field: data[field]})
 
     demands = list(qs.order_by('name'))
-
-    # A demand is "paid" if that same roll_no has a transaction for the
-    # same year of study — matched here rather than per-row, so this is
-    # one query regardless of how many demand rows are on the page.
-    paid_totals = {}
-    roll_nos = [d.roll_no for d in demands]
-    for row in (
-        Transaction.objects.filter(roll_no__in=roll_nos)
-        .values('roll_no', 'year').annotate(paid_total=Sum('total'))
-    ):
-        paid_totals[(row['roll_no'], row['year'])] = row['paid_total']
-
-    for d in demands:
-        d.paid_total = paid_totals.get((d.roll_no, d.year))
-        d.is_paid = d.paid_total is not None
+    _annotate_demand_payment_status(demands)
 
     # Counted before the status filter is applied, so all three stat
     # cards always show what clicking them would give you — a card
