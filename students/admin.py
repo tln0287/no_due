@@ -2,6 +2,10 @@ from django.contrib import admin
 
 from .models import Clearance, Demand, DueApproval, Transaction
 
+admin.site.site_header = 'No Due Tc Management'
+admin.site.site_title = 'No Due Tc Management'
+admin.site.index_title = 'No Due Tc Management'
+
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
