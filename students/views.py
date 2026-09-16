@@ -258,36 +258,50 @@ def dashboard_branch_detail(request):
     })
 
 
+def _autosize_columns(ws):
+    headers = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+    for col_idx, header in enumerate(headers, start=1):
+        ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = max(12, len(str(header)) + 2)
+
+
 @login_required
 @office_required
 def dashboard_branch_export(request):
+    """?dataset=demand or ?dataset=transactions exports just that one
+    table as a single-sheet workbook; anything else (or omitted) falls
+    back to both, on separate sheets, for a direct link that doesn't
+    specify."""
     status, demands, transactions = _branch_modal_data(request)
     branch = request.GET.get('branch') or 'all'
+    dataset = request.GET.get('dataset', 'both')
 
     wb = openpyxl.Workbook()
-    ws_demand = wb.active
-    ws_demand.title = 'Demand'
-    ws_demand.append(['Name', 'Roll No', 'Course', 'Section', 'Year', 'Academic Year', 'Installment', 'Amount (Rs.)', 'Paid'])
-    for d in demands:
-        ws_demand.append([
-            d.name, d.roll_no, d.course, d.section, d.year, d.academic_year,
-            d.installment, float(d.total or 0), 'Yes' if d.is_paid else 'No',
-        ])
 
-    ws_txn = wb.create_sheet('Transactions')
-    ws_txn.append(['Name', 'Roll No', 'Order ID', 'Amount (Rs.)', 'Date', 'Status'])
-    for t in transactions:
-        ws_txn.append([
-            t.name, t.roll_no, t.order_id, float(t.total or 0),
-            t.transaction_date.strftime('%Y-%m-%d %H:%M') if t.transaction_date else '', t.order_status,
-        ])
+    if dataset in ('demand', 'both'):
+        ws_demand = wb.active
+        ws_demand.title = 'Demand'
+        ws_demand.append(['Name', 'Roll No', 'Course', 'Section', 'Year', 'Academic Year', 'Installment', 'Amount (Rs.)', 'Paid'])
+        for d in demands:
+            ws_demand.append([
+                d.name, d.roll_no, d.course, d.section, d.year, d.academic_year,
+                d.installment, float(d.total or 0), 'Yes' if d.is_paid else 'No',
+            ])
+        _autosize_columns(ws_demand)
 
-    for ws in (ws_demand, ws_txn):
-        headers = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
-        for col_idx, header in enumerate(headers, start=1):
-            ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = max(12, len(str(header)) + 2)
+    if dataset in ('transactions', 'both'):
+        ws_txn = wb.active if dataset == 'transactions' else wb.create_sheet('Transactions')
+        if dataset == 'transactions':
+            ws_txn.title = 'Transactions'
+        ws_txn.append(['Name', 'Roll No', 'Order ID', 'Amount (Rs.)', 'Date', 'Status'])
+        for t in transactions:
+            ws_txn.append([
+                t.name, t.roll_no, t.order_id, float(t.total or 0),
+                t.transaction_date.strftime('%Y-%m-%d %H:%M') if t.transaction_date else '', t.order_status,
+            ])
+        _autosize_columns(ws_txn)
 
-    filename = f'{branch}_{status}_detail.xlsx'.replace(' ', '_')
+    suffix = {'demand': 'demand', 'transactions': 'transactions'}.get(dataset, 'detail')
+    filename = f'{branch}_{status}_{suffix}.xlsx'.replace(' ', '_')
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     wb.save(response)
