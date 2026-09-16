@@ -4,6 +4,9 @@ from . import views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
+    path('dashboard/export/branch/', views.dashboard_export_branch, name='dashboard-export-branch'),
+    path('dashboard/export/pending/', views.dashboard_export_pending, name='dashboard-export-pending'),
+    path('dashboard/export/recent/', views.dashboard_export_recent, name='dashboard-export-recent'),
     path('students/', views.student_list, name='student-list'),
     path('students/upload/', views.student_upload, name='student-upload'),
     path('students/upload/sample/', views.sample_format, name='sample-format'),

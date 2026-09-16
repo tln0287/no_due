@@ -35,9 +35,18 @@ def _annotate_demand_payment_status(demands):
         d.is_paid = d.paid_total is not None
 
 
-@login_required
-@office_required
-def dashboard(request):
+def _rate_accent(rate):
+    if rate >= 75:
+        return 'success'
+    if rate >= 40:
+        return 'warning'
+    return 'danger'
+
+
+def _dashboard_context(request):
+    """Everything the dashboard page (and its Excel exports) need, built
+    from the same filtered querysets — so an export always matches
+    exactly what's on screen, never a different slice of the data."""
     form = DashboardFilterForm(request.GET or None)
 
     txn_qs = Transaction.objects.all()
@@ -93,18 +102,13 @@ def dashboard(request):
     # year digit — no separate ordering key needed.
     by_installment = dict(sorted(_grouped(lambda d: d.installment).items()))
 
-    top_pending = sorted((d for d in demands if not d.is_paid), key=lambda d: -(d.total or 0))[:8]
-    recent = txn_qs.order_by('-transaction_date')[:8]
+    # Full (untruncated) lists for the Excel exports; the dashboard page
+    # itself only shows the first page of each as a preview.
+    all_pending = sorted((d for d in demands if not d.is_paid), key=lambda d: -(d.total or 0))
+    all_recent = list(txn_qs.order_by('-transaction_date'))
     student_paid_rate = round(paid_students / len(demands) * 100, 1) if demands else 0
 
-    def _rate_accent(rate):
-        if rate >= 75:
-            return 'success'
-        if rate >= 40:
-            return 'warning'
-        return 'danger'
-
-    return render(request, 'dashboard.html', {
+    return {
         'form': form,
         'total_students': total_students,
         'total_collected': total_collected,
@@ -120,8 +124,10 @@ def dashboard(request):
         'student_paid_rate_accent': _rate_accent(student_paid_rate),
         'by_branch': by_branch,
         'by_installment': by_installment,
-        'top_pending': top_pending,
-        'recent': recent,
+        'top_pending': all_pending[:8],
+        'recent': all_recent[:8],
+        'all_pending': all_pending,
+        'all_recent': all_recent,
         'branch_chart_data': {
             'labels': list(by_branch.keys()),
             'paid': [round(row['paid'], 2) for row in by_branch.values()],
@@ -132,7 +138,66 @@ def dashboard(request):
             'paid': [round(row['paid'], 2) for row in by_installment.values()],
             'pending': [round(row['pending'], 2) for row in by_installment.values()],
         },
-    })
+    }
+
+
+@login_required
+@office_required
+def dashboard(request):
+    return render(request, 'dashboard.html', _dashboard_context(request))
+
+
+def _xlsx_response(filename, headers, rows):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(headers)
+    for row in rows:
+        ws.append(row)
+    for col_idx, header in enumerate(headers, start=1):
+        ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = max(12, len(str(header)) + 2)
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
+
+
+@login_required
+@office_required
+def dashboard_export_branch(request):
+    ctx = _dashboard_context(request)
+    headers = ['Branch', 'Students', 'Paid Students', 'Collected (Rs.)', 'Demand (Rs.)', 'Pending (Rs.)', 'Rate (%)']
+    rows = [
+        [branch, row['students'], row['paid_students'], row['paid'], row['demand'], row['pending'], row['rate']]
+        for branch, row in ctx['by_branch'].items()
+    ]
+    return _xlsx_response('branch_wise_breakdown.xlsx', headers, rows)
+
+
+@login_required
+@office_required
+def dashboard_export_pending(request):
+    ctx = _dashboard_context(request)
+    headers = ['Name', 'Roll No', 'Course', 'Branch', 'Section', 'Year', 'Academic Year', 'Installment', 'Pending (Rs.)']
+    rows = [
+        [d.name, d.roll_no, d.course, d.branch, d.section, d.year, d.academic_year, d.installment, float(d.total or 0)]
+        for d in ctx['all_pending']
+    ]
+    return _xlsx_response('needs_attention_pending.xlsx', headers, rows)
+
+
+@login_required
+@office_required
+def dashboard_export_recent(request):
+    ctx = _dashboard_context(request)
+    headers = ['Name', 'Roll No', 'Course', 'Branch', 'Amount (Rs.)', 'Date']
+    rows = [
+        [
+            t.name, t.roll_no, t.course, t.branch, float(t.total or 0),
+            t.transaction_date.strftime('%Y-%m-%d %H:%M') if t.transaction_date else '',
+        ]
+        for t in ctx['all_recent']
+    ]
+    return _xlsx_response('recent_transactions.xlsx', headers, rows)
 
 
 @login_required

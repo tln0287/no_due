@@ -91,7 +91,10 @@
 <div class="row g-3 mb-3">
   <div class="col-lg-7">
     <div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.42s">
-      <div class="widget-title"><span>Branch-wise Breakdown</span></div>
+      <div class="widget-title">
+        <span>Branch-wise Breakdown</span>
+        <a href="{% url 'dashboard-export-branch' %}{% querystring %}" class="widget-link"><i class="bi bi-file-earmark-excel"></i> Export to Excel</a>
+      </div>
       <div style="overflow-x:auto;">
       <table class="lr-table">
         <thead><tr><th>Branch</th><th>Students</th><th>Paid</th><th>Collected (&#8377;)</th><th>Demand (&#8377;)</th><th>Pending (&#8377;)</th><th>Rate</th></tr></thead>
@@ -124,7 +127,10 @@
     <div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.46s">
       <div class="widget-title">
         <span>Needs Attention — Highest Pending</span>
-        <a href="{% url 'demand-list' %}?status=UNPAID" class="widget-link">View all</a>
+        <div class="widget-links">
+          <a href="{% url 'demand-list' %}?status=UNPAID" class="widget-link">View all</a>
+          <a href="{% url 'dashboard-export-pending' %}{% querystring %}" class="widget-link"><i class="bi bi-file-earmark-excel"></i> Export</a>
+        </div>
       </div>
       <div style="overflow-x:auto;">
       <table class="lr-table">
@@ -150,7 +156,10 @@
 <div class="lr-card lr-table-card dash-card fade-in-up" style="animation-delay:.5s">
   <div class="widget-title">
     <span>Recent Transactions</span>
-    <a href="{% url 'student-list' %}" class="widget-link">View all students</a>
+    <div class="widget-links">
+      <a href="{% url 'student-list' %}" class="widget-link">View all students</a>
+      <a href="{% url 'dashboard-export-recent' %}{% querystring %}" class="widget-link"><i class="bi bi-file-earmark-excel"></i> Export</a>
+    </div>
   </div>
   <div style="overflow-x:auto;">
   <table class="lr-table">

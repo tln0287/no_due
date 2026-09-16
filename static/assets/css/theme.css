@@ -328,8 +328,15 @@ body.auth-page {
 .widget-card.span-2 { grid-column: span 2; }
 @media (max-width: 1150px) { .widget-card.span-2 { grid-column: span 2; } }
 @media (max-width: 700px) { .widget-card.span-2 { grid-column: span 1; } }
-.widget-title { font-weight: 700; font-size: .85rem; margin-bottom: .9rem; display: flex; justify-content: space-between; align-items: baseline; color: var(--ink); }
-.widget-title .widget-link { font-size: .72rem; font-weight: 600; color: var(--brand); }
+.widget-title { font-weight: 700; font-size: .85rem; margin-bottom: .9rem; display: flex; justify-content: space-between; align-items: baseline; color: var(--ink); gap: .75rem; }
+.widget-title .widget-link { font-size: .72rem; font-weight: 600; color: var(--brand); white-space: nowrap; }
+.widget-title .widget-links { display: flex; align-items: baseline; gap: .9rem; }
+
+/* .lr-table-card zeroes the card's own padding (so table cells can run
+   edge-to-edge); its heading needs that padding back, matching the
+   table's own cell inset (.9rem) so the title lines up with the column
+   headers directly beneath it instead of sitting flush on the card edge. */
+.lr-table-card .widget-title { padding: 1.1rem .9rem 0; }
 .widget-chart { min-height: 220px; }
 
 .legend-row { display: flex; gap: .9rem; font-size: .68rem; color: var(--ink-faint); margin-bottom: .5rem; flex-wrap: wrap; font-weight: 600; }
