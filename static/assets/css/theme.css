@@ -199,6 +199,12 @@ a { text-decoration: none; }
 .meter-fill.accent-danger { background: var(--danger); }
 .meter-caption { display: flex; justify-content: space-between; font-size: .78rem; color: var(--ink-soft); margin-top: .4rem; }
 
+/* A table cell that opens the branch-detail modal — a subtle dashed
+   underline hints "clickable" without reading as a normal hyperlink
+   inside a data table. */
+.branch-metric-link { color: var(--ink); font-weight: 500; text-decoration: none; border-bottom: 1px dashed var(--border-strong); padding-bottom: 1px; }
+.branch-metric-link:hover { color: var(--brand); border-bottom-color: var(--brand); }
+
 /* ---- Dashboard entrance animation + hover lift ---- */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in-up { animation: fadeInUp .5s cubic-bezier(.22, 1, .36, 1) both; }

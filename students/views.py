@@ -43,10 +43,12 @@ def _rate_accent(rate):
     return 'danger'
 
 
-def _dashboard_context(request):
-    """Everything the dashboard page (and its Excel exports) need, built
-    from the same filtered querysets — so an export always matches
-    exactly what's on screen, never a different slice of the data."""
+def _filtered_querysets(request):
+    """Applies the dashboard's branch/course/academic_year/installment
+    filters (from the top filter row, or from a modal's own request) to
+    fresh Transaction/Demand querysets. Shared by the dashboard itself,
+    its exports, and the branch-detail modal/export — one definition of
+    "the current filter" everything else builds on."""
     form = DashboardFilterForm(request.GET or None)
 
     txn_qs = Transaction.objects.all()
@@ -65,6 +67,15 @@ def _dashboard_context(request):
             demand_qs = demand_qs.filter(academic_year=data['academic_year'])
         if data.get('installment'):
             demand_qs = demand_qs.filter(installment=data['installment'])
+
+    return form, txn_qs, demand_qs
+
+
+def _dashboard_context(request):
+    """Everything the dashboard page (and its Excel exports) need, built
+    from the same filtered querysets — so an export always matches
+    exactly what's on screen, never a different slice of the data."""
+    form, txn_qs, demand_qs = _filtered_querysets(request)
 
     total_collected = txn_qs.aggregate(v=Sum('total'))['v'] or 0
     total_students = txn_qs.values('roll_no').distinct().count()
@@ -198,6 +209,89 @@ def dashboard_export_recent(request):
         for t in ctx['all_recent']
     ]
     return _xlsx_response('recent_transactions.xlsx', headers, rows)
+
+
+def _branch_modal_data(request):
+    """Shared by the branch-detail modal (JSON) and its Excel export:
+    the current dashboard filters, narrowed to one branch and one
+    payment-status slice — 'all' / 'paid' / 'unpaid' — as clicked from
+    a Branch-wise Breakdown cell."""
+    _, txn_qs, demand_qs = _filtered_querysets(request)
+    status = request.GET.get('status', 'all')
+
+    demands = list(demand_qs)
+    _annotate_demand_payment_status(demands)
+    if status == 'paid':
+        demands = [d for d in demands if d.is_paid]
+    elif status == 'unpaid':
+        demands = [d for d in demands if not d.is_paid]
+    demands.sort(key=lambda d: d.name)
+
+    transactions = list(txn_qs.order_by('-transaction_date'))
+    return status, demands, transactions
+
+
+@login_required
+@office_required
+def dashboard_branch_detail(request):
+    status, demands, transactions = _branch_modal_data(request)
+    return JsonResponse({
+        'branch': request.GET.get('branch') or 'All Branches',
+        'status': status,
+        'demand_rows': [
+            {
+                'name': d.name, 'roll_no': d.roll_no, 'course': d.course,
+                'section': d.section, 'year': d.year, 'academic_year': d.academic_year,
+                'installment': d.installment, 'total': float(d.total or 0), 'is_paid': d.is_paid,
+            }
+            for d in demands
+        ],
+        'transaction_rows': [
+            {
+                'name': t.name, 'roll_no': t.roll_no, 'order_id': t.order_id,
+                'total': float(t.total or 0),
+                'date': t.transaction_date.strftime('%d %b %Y') if t.transaction_date else '',
+                'status': t.order_status,
+            }
+            for t in transactions
+        ],
+    })
+
+
+@login_required
+@office_required
+def dashboard_branch_export(request):
+    status, demands, transactions = _branch_modal_data(request)
+    branch = request.GET.get('branch') or 'all'
+
+    wb = openpyxl.Workbook()
+    ws_demand = wb.active
+    ws_demand.title = 'Demand'
+    ws_demand.append(['Name', 'Roll No', 'Course', 'Section', 'Year', 'Academic Year', 'Installment', 'Amount (Rs.)', 'Paid'])
+    for d in demands:
+        ws_demand.append([
+            d.name, d.roll_no, d.course, d.section, d.year, d.academic_year,
+            d.installment, float(d.total or 0), 'Yes' if d.is_paid else 'No',
+        ])
+
+    ws_txn = wb.create_sheet('Transactions')
+    ws_txn.append(['Name', 'Roll No', 'Order ID', 'Amount (Rs.)', 'Date', 'Status'])
+    for t in transactions:
+        ws_txn.append([
+            t.name, t.roll_no, t.order_id, float(t.total or 0),
+            t.transaction_date.strftime('%Y-%m-%d %H:%M') if t.transaction_date else '', t.order_status,
+        ])
+
+    for ws in (ws_demand, ws_txn):
+        headers = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
+        for col_idx, header in enumerate(headers, start=1):
+            ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = max(12, len(str(header)) + 2)
+
+    filename = f'{branch}_{status}_detail.xlsx'.replace(' ', '_')
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
 
 
 @login_required

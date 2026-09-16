@@ -102,11 +102,11 @@
           {% for branch, row in by_branch.items %}
           <tr>
             <td class="cell-primary">{{ branch }}</td>
-            <td>{{ row.students }}</td>
-            <td>{{ row.paid_students }}</td>
-            <td>&#8377;{{ row.paid|floatformat:2 }}</td>
-            <td>&#8377;{{ row.demand|floatformat:2 }}</td>
-            <td>&#8377;{{ row.pending|floatformat:2 }}</td>
+            <td><a href="#" class="branch-metric-link" data-branch="{{ branch }}" data-status="all" data-label="{{ branch }} &middot; All Students">{{ row.students }}</a></td>
+            <td><a href="#" class="branch-metric-link" data-branch="{{ branch }}" data-status="paid" data-label="{{ branch }} &middot; Paid Students">{{ row.paid_students }}</a></td>
+            <td><a href="#" class="branch-metric-link" data-branch="{{ branch }}" data-status="paid" data-label="{{ branch }} &middot; Collected">&#8377;{{ row.paid|floatformat:2 }}</a></td>
+            <td><a href="#" class="branch-metric-link" data-branch="{{ branch }}" data-status="all" data-label="{{ branch }} &middot; Demand">&#8377;{{ row.demand|floatformat:2 }}</a></td>
+            <td><a href="#" class="branch-metric-link" data-branch="{{ branch }}" data-status="unpaid" data-label="{{ branch }} &middot; Pending">&#8377;{{ row.pending|floatformat:2 }}</a></td>
             <td>
               {% if row.rate >= 75 %}<span class="pill" style="background:var(--success-soft);color:var(--success);">{{ row.rate }}%</span>
               {% elif row.rate >= 40 %}<span class="pill" style="background:var(--warning-soft);color:var(--warning);">{{ row.rate }}%</span>
@@ -178,6 +178,42 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
+</div>
+
+<div class="modal fade" id="branchDetailModal" tabindex="-1" aria-labelledby="branchDetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="branchDetailLabel">Branch Detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="branchDetailLoading" class="text-center p-4">
+          <span class="spinner-border" role="status" aria-hidden="true"></span>
+        </div>
+        <div id="branchDetailContent" class="d-none">
+          <h6 class="fw-bold">Demand Records (<span id="branchDemandCount">0</span>)</h6>
+          <div style="overflow-x:auto; max-height:280px;" class="mb-3">
+            <table class="lr-table">
+              <thead><tr><th>Name</th><th>Roll No</th><th>Course</th><th>Section</th><th>Year</th><th>Academic Year</th><th>Installment</th><th>Amount (&#8377;)</th><th>Status</th></tr></thead>
+              <tbody id="branchDemandBody"></tbody>
+            </table>
+          </div>
+          <h6 class="fw-bold">Transaction Records (<span id="branchTxnCount">0</span>)</h6>
+          <div style="overflow-x:auto; max-height:280px;">
+            <table class="lr-table">
+              <thead><tr><th>Name</th><th>Roll No</th><th>Order ID</th><th>Amount (&#8377;)</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="branchTxnBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" id="branchDetailExport" class="btn btn-primary btn-sm"><i class="bi bi-file-earmark-excel"></i> Export to Excel</a>
+        <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -254,6 +290,117 @@
 
   stackedBarChart('#branch-chart', 'branch-chart-data');
   stackedBarChart('#installment-chart', 'installment-chart-data');
+
+  // --- Branch-detail modal: click a count in Branch-wise Breakdown to
+  // see the underlying demand + transaction records, with its own
+  // Excel export scoped to exactly that branch + status slice. ---
+  var branchModalEl = document.getElementById('branchDetailModal');
+  var branchModal = branchModalEl ? new bootstrap.Modal(branchModalEl) : null;
+  var loadingEl = document.getElementById('branchDetailLoading');
+  var contentEl = document.getElementById('branchDetailContent');
+  var demandBody = document.getElementById('branchDemandBody');
+  var txnBody = document.getElementById('branchTxnBody');
+  var exportLink = document.getElementById('branchDetailExport');
+  var requestSeq = 0;
+
+  function cell(text) {
+    var td = document.createElement('td');
+    td.textContent = text;
+    return td;
+  }
+
+  function pillCell(text, accent) {
+    var td = document.createElement('td');
+    var span = document.createElement('span');
+    span.className = 'pill';
+    span.style.background = 'var(--' + accent + '-soft)';
+    span.style.color = 'var(--' + accent + ')';
+    span.textContent = text;
+    td.appendChild(span);
+    return td;
+  }
+
+  function emptyRow(colspan) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    td.colSpan = colspan;
+    td.className = 'text-muted';
+    td.textContent = 'No records.';
+    tr.appendChild(td);
+    return tr;
+  }
+
+  function renderBranchData(data) {
+    document.getElementById('branchDetailLabel').textContent = data._label || data.branch;
+
+    demandBody.innerHTML = '';
+    document.getElementById('branchDemandCount').textContent = data.demand_rows.length;
+    if (!data.demand_rows.length) {
+      demandBody.appendChild(emptyRow(9));
+    }
+    data.demand_rows.forEach(function (d) {
+      var tr = document.createElement('tr');
+      [d.name, d.roll_no, d.course, d.section, d.year, d.academic_year, d.installment].forEach(function (v) {
+        tr.appendChild(cell(v));
+      });
+      tr.appendChild(cell('₹' + Number(d.total).toLocaleString('en-IN')));
+      tr.appendChild(d.is_paid ? pillCell('Paid', 'success') : pillCell('Not Paid', 'danger'));
+      demandBody.appendChild(tr);
+    });
+
+    txnBody.innerHTML = '';
+    document.getElementById('branchTxnCount').textContent = data.transaction_rows.length;
+    if (!data.transaction_rows.length) {
+      txnBody.appendChild(emptyRow(6));
+    }
+    data.transaction_rows.forEach(function (t) {
+      var tr = document.createElement('tr');
+      [t.name, t.roll_no, t.order_id].forEach(function (v) { tr.appendChild(cell(v)); });
+      tr.appendChild(cell('₹' + Number(t.total).toLocaleString('en-IN')));
+      tr.appendChild(cell(t.date));
+      tr.appendChild(cell(t.status));
+      txnBody.appendChild(tr);
+    });
+
+    loadingEl.classList.add('d-none');
+    contentEl.classList.remove('d-none');
+  }
+
+  document.querySelectorAll('.branch-metric-link').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (!branchModal) return;
+
+      var params = new URLSearchParams(window.location.search);
+      params.set('branch', link.dataset.branch);
+      params.set('status', link.dataset.status);
+      var query = params.toString();
+
+      document.getElementById('branchDetailLabel').textContent = link.dataset.label;
+      loadingEl.classList.remove('d-none');
+      contentEl.classList.add('d-none');
+      exportLink.href = '{% url "dashboard-branch-export" %}?' + query;
+      branchModal.show();
+
+      var mySeq = ++requestSeq;
+      fetch('{% url "dashboard-branch-detail" %}?' + query)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (mySeq !== requestSeq) return; // a newer click superseded this one
+          data._label = link.dataset.label;
+          renderBranchData(data);
+        })
+        .catch(function () {
+          if (mySeq !== requestSeq) return;
+          loadingEl.classList.add('d-none');
+          contentEl.classList.remove('d-none');
+          demandBody.innerHTML = '';
+          demandBody.appendChild(emptyRow(9));
+          txnBody.innerHTML = '';
+          txnBody.appendChild(emptyRow(6));
+        });
+    });
+  });
 })();
 </script>
 {% endblock %}
