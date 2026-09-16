@@ -33,8 +33,8 @@ class DemandUploadForm(forms.Form):
 
 
 class StudentFilterForm(forms.Form):
-    q = forms.CharField(required=False, label='Name / Roll No / ID No', widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Search name, roll no, ID no…'}))
+    q = forms.CharField(required=False, label='Name / Roll No / ID No / Order / App Code', widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Search name, roll no, ID no, order, app code…'}))
     course = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-select'}))
     branch = forms.ChoiceField(required=False, label='Group / Branch', widget=forms.Select(attrs={'class': 'form-select'}))
     section = forms.ChoiceField(required=False, widget=forms.Select(attrs={'class': 'form-select'}))

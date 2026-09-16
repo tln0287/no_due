@@ -53,7 +53,10 @@ def student_list(request):
         data = form.cleaned_data
         if data.get('q'):
             q = data['q']
-            qs = qs.filter(Q(name__icontains=q) | Q(roll_no__icontains=q) | Q(id_no__icontains=q))
+            qs = qs.filter(
+                Q(name__icontains=q) | Q(roll_no__icontains=q) | Q(id_no__icontains=q)
+                | Q(order_id__icontains=q) | Q(app_code__icontains=q)
+            )
         for field in ('course', 'branch', 'section', 'year', 'academic_year', 'admission_type'):
             if data.get(field):
                 qs = qs.filter(**{field: data[field]})
