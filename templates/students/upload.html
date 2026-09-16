@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Add Students{% endblock %}
+{% block title %}Add Student Transactions{% endblock %}
 {% block breadcrumb %}
-<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <span class="current">Add Students</span></div>
+<div class="breadcrumb-trail"><a href="{% url 'dashboard' %}">No-Dues &amp; TC</a> <span>/</span> <a href="{% url 'student-list' %}">Students</a> <span>/</span> <span class="current">Add Student Transactions</span></div>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
   <div>
-    <h1 class="page-title">Add Students</h1>
+    <h1 class="page-title">Add Student Transactions</h1>
     <div class="page-subtitle">Upload an Excel file in the transactions.xlsx format to add new students or refresh existing ones — there's no separate student table, a student is just a Roll No that appears here.</div>
   </div>
   <a href="{% url 'sample-format' %}" class="btn btn-light"><i class="bi bi-download"></i> Download Sample Format</a>

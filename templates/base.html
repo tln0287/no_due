@@ -34,7 +34,7 @@
         <i class="bi bi-mortarboard-fill"></i><span>Students</span>
       </a>
       <a href="{% url 'student-upload' %}" class="nav-link {% if request.resolver_match.url_name == 'student-upload' %}active{% endif %}">
-        <i class="bi bi-upload"></i><span>Add Students</span>
+        <i class="bi bi-upload"></i><span>Add Student Transactions</span>
       </a>
       <a href="{% url 'demand-list' %}" class="nav-link {% if request.resolver_match.url_name == 'demand-list' %}active{% endif %}">
         <i class="bi bi-cash-stack"></i><span>Student Demand</span>
