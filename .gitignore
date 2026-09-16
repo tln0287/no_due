@@ -7,14 +7,11 @@ myenv/
 venv/
 
 # Django
-db.sqlite3
+
 staticfiles/
 media/
 
-# Real student data (PII) — imported locally via manage.py import_transactions /
-# import_demand or the in-app upload pages, never committed
-transactions.xlsx
-upload.xlsx
+
 
 # Local tool config / backups
 .claude/
