@@ -87,10 +87,33 @@ WSGI_APPLICATION = 'nodues_tc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Vercel's filesystem is read-only at runtime except /tmp — SQLite can't
+# open the committed db.sqlite3 for writing at all there (hence
+# "attempt to write a readonly database" on login). /tmp is the only
+# writable path, so on Vercel we copy the committed db in there once per
+# cold start and point SQLite at that copy instead.
+#
+# This makes writes *possible*, not durable: /tmp is wiped whenever a new
+# serverless instance spins up (a new deployment, scaling up, an instance
+# recycling), and concurrent requests can land on different instances
+# that each have their own /tmp — so two users hitting the site at the
+# same time can each write to a different copy of the database. Anything
+# written this way should be treated as disposable, not as the real
+# system of record.
+if os.environ.get('VERCEL'):
+    import shutil
+
+    _RUNTIME_DB = Path('/tmp/db.sqlite3')
+    if not _RUNTIME_DB.exists():
+        shutil.copy(BASE_DIR / 'db.sqlite3', _RUNTIME_DB)
+    _DB_PATH = _RUNTIME_DB
+else:
+    _DB_PATH = BASE_DIR / 'db.sqlite3'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': _DB_PATH,
     }
 }
 
